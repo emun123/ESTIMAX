@@ -643,58 +643,6 @@ textarea{resize:vertical;line-height:1.6}
 <div class="toast-wrap"><div class="toast" id="toastEl"></div></div>
 
 <script>
-// ═══════════════════════════════════════════════════════════
-// GRISHA: AUTH SYSTEM - LOGIN FIX
-// ═══════════════════════════════════════════════════════════
-const AUTH_KEY='estimax_user_v1';
-const DEMO_USERS={admin:{password:'123456',role:'Anatoli_Appraiser',name:'משה כהן',email:'admin@estimax.co.il'}};
-
-function handleLogin(e){
-  e.preventDefault();
-  const u=document.getElementById('loginUsername').value.trim();
-  const p=document.getElementById('loginPassword').value;
-  const user=DEMO_USERS[u];
-  const err=document.getElementById('loginError');
-  if(user&&user.password===p){
-    localStorage.setItem(AUTH_KEY,JSON.stringify({username:u,role:user.role,name:user.name,email:user.email}));
-    if(err)err.classList.remove('show');
-    document.getElementById('loginOverlay').classList.add('hidden');
-    document.querySelector('.shell').style.display='flex';
-    const nameEl=document.querySelector('.sb-user-name');
-    if(nameEl)nameEl.textContent=user.name;
-    showPage('dashboard');
-  }else{
-    if(err){err.textContent='שם משתמש או סיסמה שגויים';err.classList.add('show');}
-  }
-}
-
-function getCurrentUser(){
-  try{const raw=localStorage.getItem(AUTH_KEY);return raw?JSON.parse(raw):null;}catch(e){return null;}
-}
-
-function checkAuth(){
-  const user=getCurrentUser();
-  if(!user){
-    document.getElementById('loginOverlay').classList.remove('hidden');
-    document.querySelector('.shell').style.display='none';
-  }else{
-    document.getElementById('loginOverlay').classList.add('hidden');
-    document.querySelector('.shell').style.display='flex';
-    const nameEl=document.querySelector('.sb-user-name');
-    if(nameEl)nameEl.textContent=user.name;
-  }
-}
-
-function logout(){
-  if(confirm('האם אתה בטוח שברצונך להתנתק?')){
-    localStorage.removeItem(AUTH_KEY);
-    location.reload();
-  }
-}
-
-document.addEventListener('DOMContentLoaded',function(){checkAuth();});
-// ═══════════════════════════════════════════════════════════
-
 // ─── SIGNATURE ───
 var sigCanvas=null,sigCtx=null,isDrawing=false;
 function initSignature(){

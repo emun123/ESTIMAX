@@ -100,10 +100,9 @@ body{font-family:'Segoe UI','Arial',sans-serif;background:var(--bg);color:var(--
 .form-container{max-width:900px}
 .next-step-bar{display:flex;justify-content:flex-start;margin-top:24px;padding-top:18px;border-top:1px solid var(--border)}
 .next-step-bar .tb-btn{font-size:14px;font-weight:700;padding:12px 26px}
-.form-tabs{display:flex;justify-content:space-between;border-bottom:2px solid var(--border);margin-bottom:24px;gap:3px;overflow-x:hidden;scrollbar-width:none}
-.form-tabs::-webkit-scrollbar{display:none;width:0;height:0}
-.form-tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 12px;font-size:11px;font-weight:600;cursor:pointer;color:var(--text2);border-bottom:3px solid transparent;border-radius:8px 8px 0 0;margin-bottom:-2px;white-space:nowrap;transition:all .15s;flex:1;min-width:0}
-.form-tab svg{width:18px;height:18px}
+.form-tabs{display:flex;justify-content:center;border-bottom:2px solid var(--border);margin-bottom:24px;gap:6px;overflow-x:auto}
+.form-tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16px 26px;font-size:13px;font-weight:600;cursor:pointer;color:var(--text2);border-bottom:3px solid transparent;border-radius:10px 10px 0 0;margin-bottom:-2px;white-space:nowrap;transition:all .15s}
+.form-tab svg{width:26px;height:26px}
 .form-tab:hover{color:var(--text);background:var(--bg)}
 .form-tab.on{color:var(--blue);border-bottom-color:var(--blue);background:var(--blue-light)}
 .form-tabs.full-tabs{justify-content:space-between;overflow-x:hidden;scrollbar-width:none}
@@ -228,15 +227,6 @@ textarea{resize:vertical;line-height:1.6}
 @keyframes spinSync{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 .anatoli-box{background:var(--blue-light);border:1px solid var(--blue);border-radius:var(--radius-lg);padding:14px 16px;margin-top:14px}
 .anatoli-hd{font-size:13px;font-weight:700;color:var(--blue);margin-bottom:6px}
-.doc-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--bg);display:flex;flex-direction:column}
-.doc-thumb{position:relative;width:100%;padding-top:70%;background:#f2f2f2}
-.doc-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.doc-file-ico{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:30px}
-.doc-tag{border:none;border-top:1px solid var(--border);font-size:11px;padding:4px 6px;text-align:center;background:#fff;width:100%;box-sizing:border-box}
-.doc-fname{font-size:10px;color:var(--text2);padding:2px 6px 6px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.fg.field-ai-fill{background:#FFF8ED;border-radius:var(--radius);padding:6px;margin:-6px -6px 8px}
-.fg.field-ai-fill input,.fg.field-ai-fill select,.fg.field-ai-fill textarea{border-color:#F5A623!important}
-.fg.field-ai-fill label::after{content:' 🤖 אנטולי — ממתין לאישור';color:#F5A623;font-size:10px;font-weight:600}
 .modal-footer{padding:14px 24px 18px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end}
 /* toast */
 .toast-wrap{position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:999;display:flex;flex-direction:column;gap:6px;align-items:center}
@@ -286,19 +276,6 @@ textarea{resize:vertical;line-height:1.6}
 .rp-sig-block{text-align:center;width:180px}
 .rp-sig-line{border-top:1px solid #555;margin-top:28px;margin-bottom:5px}
 .rp-sig-lbl{font-size:11px;color:var(--text2);line-height:1.5}
-/* DIGITAL SIGNATURE */
-.sig-container{border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-top:16px;background:#fafbfc}
-.sig-canvas{display:block;border:1px dashed var(--border2);border-radius:4px;background:#fff;width:100%;height:120px;cursor:crosshair}
-.sig-info{display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:8px;flex-wrap:wrap}
-.sig-meta{font-size:11px;color:var(--text2)}
-.sig-buttons{display:flex;gap:6px;font-size:12px}
-.sig-btn{padding:4px 10px;border:1px solid var(--border2);border-radius:4px;background:#fff;cursor:pointer;font-family:inherit;transition:all .15s}
-.sig-btn:hover{border-color:var(--blue);color:var(--blue)}
-/* DIGITAL SEAL */
-.digital-seal{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#1F7A3D 0%,#27500A 100%);color:#fff;padding:8px 14px;border-radius:20px;font-size:11px;font-weight:700;border:2px solid #1F7A3D;box-shadow:0 2px 8px rgba(31,122,61,.3)}
-.digital-seal svg{width:16px;height:16px;flex-shrink:0}
-.seal-stamp{position:fixed;top:40px;right:40px;width:80px;height:80px;border:3px dashed #27500A;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#27500A;text-align:center;padding:4px;line-height:1.2;transform:rotate(-15deg);opacity:.15;pointer-events:none;z-index:5}
-@media print{.seal-stamp{opacity:.25}}
 .rp-footer{border-top:1px solid #ccc;padding-top:6px;margin-top:16px;display:flex;justify-content:space-between;font-size:10px;color:var(--text3)}
 /* util */
 .hidden{display:none!important}
@@ -313,24 +290,6 @@ textarea{resize:vertical;line-height:1.6}
   .main{margin-right:0}
   .rp-page{border:none;box-shadow:none;padding:10mm}
 }
-/* LOGIN SCREEN */
-.login-overlay{position:fixed;inset:0;background:linear-gradient(135deg,var(--blue) 0%,var(--blue2) 100%);display:flex;align-items:center;justify-content:center;z-index:9999;opacity:1;transition:opacity .3s}
-.login-overlay.hidden{display:none}
-.login-card{background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);width:400px;max-width:95vw;padding:40px;text-align:center}
-.login-logo{font-size:28px;font-weight:700;color:var(--blue);margin-bottom:8px}
-.login-sub{font-size:13px;color:var(--text2);margin-bottom:28px}
-.login-form .fg{margin-bottom:16px;text-align:right}
-.login-form label{font-weight:600;color:var(--text)}
-.login-form input{width:100%;padding:11px 14px;border:1.5px solid var(--border2);border-radius:var(--radius);font-size:14px;font-family:inherit}
-.login-form input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(12,68,124,.08)}
-.login-error{background:#FCEBEB;color:var(--red);border:1px solid #E2A8A8;border-radius:var(--radius);padding:10px 14px;font-size:12px;margin-bottom:16px;display:none}
-.login-error.show{display:block}
-.login-btn{width:100%;padding:12px;background:var(--blue);color:#fff;border:none;border-radius:var(--radius);font-size:14px;font-weight:600;cursor:pointer;transition:background .2s;font-family:inherit}
-.login-btn:hover{background:var(--blue2)}
-.login-demo{font-size:11px;color:var(--text3);margin-top:16px}
-.login-forgot{font-size:12px;margin-top:12px}
-.login-forgot a{color:var(--blue);cursor:pointer;text-decoration:underline}
-.login-forgot a:hover{color:var(--blue2)}
 /* responsive */
 @media(max-width:900px){
   .sidebar{display:none}
@@ -343,44 +302,6 @@ textarea{resize:vertical;line-height:1.6}
 </style>
 </head>
 <body>
-
-<!-- ══ LOGIN SCREEN ══ -->
-<div class="login-overlay" id="loginOverlay">
-  <div class="login-card">
-    <div class="login-logo">Estimax</div>
-    <div class="login-sub">הדרך החכמה להעריך</div>
-    <div class="login-error" id="loginError"></div>
-    <form class="login-form" onsubmit="handleLogin(event)">
-      <div class="fg"><label>שם משתמש</label><input type="text" id="loginUsername" placeholder="הזן שם משתמש" required autofocus/></div>
-      <div class="fg"><label>סיסמה</label><input type="password" id="loginPassword" placeholder="הזן סיסמה" required/></div>
-      <button type="submit" class="login-btn">התחברות</button>
-    </form>
-    <div class="login-demo">שם משתמש: <b>admin</b> | סיסמה: <b>123456</b></div>
-    <div class="login-forgot"><a onclick="openForgotPassword()">שכחתי סיסמה?</a></div>
-  </div>
-</div>
-
-<!-- ══ FORGOT PASSWORD MODAL ══ -->
-<div class="modal-overlay" id="forgotModal" onclick="closeModalOut(event,'forgotModal')">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-header-title">שחזור סיסמה</div>
-      <button class="modal-close" onclick="closeModal('forgotModal')">×</button>
-    </div>
-    <div class="modal-body">
-      <div class="login-error" id="forgotError" style="margin-bottom:12px"></div>
-      <div class="fg" style="margin-bottom:16px"><label>שם משתמש</label><input type="text" id="forgotUsername" placeholder="הזן שם משתמש" style="width:100%;padding:9px 12px;border:1.5px solid var(--border2);border-radius:var(--radius);font-size:13px;font-family:inherit"/></div>
-      <div class="fg" id="securityQSection" style="display:none;margin-bottom:16px"><label id="securityQLabel"></label><input type="text" id="securityAnswer" placeholder="הזן את התשובה" style="width:100%;padding:9px 12px;border:1.5px solid var(--border2);border-radius:var(--radius);font-size:13px;font-family:inherit"/></div>
-      <div id="passwordDisplay" style="display:none;background:var(--blue-light);border:1px solid var(--blue);border-radius:var(--radius);padding:12px;margin-bottom:12px;text-align:center">
-        <div style="font-size:11px;color:var(--blue);margin-bottom:4px">הסיסמה שלך:</div>
-        <div style="font-size:16px;font-weight:700;color:var(--blue);font-family:monospace;letter-spacing:2px" id="displayedPassword"></div>
-        <div style="font-size:10px;color:var(--text2);margin-top:6px">💡 הסיסמה נשלחה גם לאימייל שלך</div>
-      </div>
-      <button class="tb-btn tb-btn-primary" style="width:100%" onclick="verifyForgotPassword()">בדוק תשובה</button>
-    </div>
-  </div>
-</div>
-
 <div class="shell">
 
 <!-- ═══════ SIDEBAR ═══════ -->
@@ -428,10 +349,6 @@ textarea{resize:vertical;line-height:1.6}
   </div>
   <div class="sb-bottom">
     <div class="cloud-status"><div class="cloud-dot"></div>מסונכרן עם הענן</div>
-    <div class="nav-item" onclick="logout()" style="margin-top:12px;border-radius:var(--radius);background:rgba(255,255,255,.1);color:#fff">
-      <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="9" height="10" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M6 8h5M10 6l2 2-2 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      התנתקות
-    </div>
   </div>
 </nav>
 
@@ -575,8 +492,7 @@ textarea{resize:vertical;line-height:1.6}
       <button class="tb-btn tb-btn-ghost ml-auto" id="autoPdfBtn" onclick="autoSavePDF()" title="יצירת PDF ושמירה אוטומטית">☁ שמירה אוטומטית ל-PDF</button>
       <button class="tb-btn tb-btn-primary" onclick="window.print()">🖨 הדפס / שמור PDF</button>
     </div>
-    <div class="seal-stamp" id="sealStamp">✓ חתימה דיגיטלית מאומתת</div>
-  <div class="rp-page" id="reportPage"></div>
+    <div class="rp-page" id="reportPage"></div>
   </div>
 
   </div><!-- /page-body -->
@@ -643,127 +559,6 @@ textarea{resize:vertical;line-height:1.6}
 <div class="toast-wrap"><div class="toast" id="toastEl"></div></div>
 
 <script>
-// ─── SIGNATURE ───
-var sigCanvas=null,sigCtx=null,isDrawing=false;
-function initSignature(){
-  setTimeout(function(){
-    sigCanvas=document.getElementById('sigCanvas');
-    if(!sigCanvas)return;
-    sigCtx=sigCanvas.getContext('2d');
-    var rect=sigCanvas.getBoundingClientRect();
-    sigCanvas.width=sigCanvas.offsetWidth;
-    sigCanvas.height=sigCanvas.offsetHeight;
-    sigCtx.lineCap='round';
-    sigCtx.lineJoin='round';
-    sigCtx.lineWidth=2;
-    sigCtx.strokeStyle='#0C447C';
-    sigCanvas.onmousedown=function(e){isDrawing=true;var r=sigCanvas.getBoundingClientRect();sigCtx.beginPath();sigCtx.moveTo(e.clientX-r.left,e.clientY-r.top);};
-    sigCanvas.onmousemove=function(e){if(!isDrawing)return;var r=sigCanvas.getBoundingClientRect();sigCtx.lineTo(e.clientX-r.left,e.clientY-r.top);sigCtx.stroke();};
-    sigCanvas.onmouseup=function(){isDrawing=false;};
-    sigCanvas.onmouseleave=function(){isDrawing=false;};
-    updateSigTime();
-    setInterval(updateSigTime,60000);
-  },100);
-}
-function updateSigTime(){
-  var el=document.getElementById('sigTime');
-  if(!el)return;
-  var now=new Date();
-  var h=('0'+now.getHours()).slice(-2),m=('0'+now.getMinutes()).slice(-2);
-  el.textContent=h+':'+m;
-}
-function clearSignature(){if(sigCanvas&&sigCtx){sigCtx.clearRect(0,0,sigCanvas.width,sigCanvas.height);}}
-function saveSignature(){toast('חתימה נשמרה בהצלחה','success');}
-document.addEventListener('DOMContentLoaded',function(){setTimeout(initSignature,200);});
-// ─── LOGIN ───
-var AUTH_KEY='estimax_user_v1';
-var DEMO_USERS={admin:{password:'123456',role:'Anatoli_Appraiser',name:'משה כהן',email:'admin@estimax.co.il',securityQ:'שם חיית חמדתך?',securityA:'לשמואל'}};
-function handleLogin(e){
-  e.preventDefault();
-  var usr=document.getElementById('loginUsername').value.trim();
-  var pwd=document.getElementById('loginPassword').value;
-  var user=DEMO_USERS[usr];
-  var err=document.getElementById('loginError');
-  if(user&&user.password===pwd){
-    localStorage.setItem(AUTH_KEY,JSON.stringify({username:usr,role:user.role,name:user.name}));
-    err.classList.remove('show');
-    document.getElementById('loginOverlay').classList.add('hidden');
-    updateUserDisplay();
-    showPage('dashboard');
-  }else{
-    err.textContent='שם משתמש או סיסמה שגויים';
-    err.classList.add('show');
-  }
-}
-function getCurrentUser(){
-  try{var raw=localStorage.getItem(AUTH_KEY);return raw?JSON.parse(raw):null;}catch(e){return null;}
-}
-function logout(){
-  if(confirm('האם אתה בטוח שברצונך להתנתק?')){
-    localStorage.removeItem(AUTH_KEY);
-    location.reload();
-  }
-}
-function updateUserDisplay(){
-  var user=getCurrentUser();
-  if(!user)return;
-  var avatarEl=document.querySelector('.sb-avatar');
-  if(avatarEl){
-    var initials=user.name.split(' ').map(function(w){return w.charAt(0);}).join('').substring(0,2);
-    avatarEl.textContent=initials;
-  }
-  var nameEl=document.querySelector('.sb-user-name');
-  if(nameEl)nameEl.textContent=user.name;
-}
-function checkAuth(){
-  var user=getCurrentUser();
-  if(!user){
-    document.getElementById('loginOverlay').classList.remove('hidden');
-  }else{
-    document.getElementById('loginOverlay').classList.add('hidden');
-    updateUserDisplay();
-  }
-}
-function openForgotPassword(){
-  document.getElementById('forgotUsername').value='';
-  document.getElementById('securityAnswer').value='';
-  document.getElementById('securityQSection').style.display='none';
-  document.getElementById('passwordDisplay').style.display='none';
-  document.getElementById('forgotError').classList.remove('show');
-  document.getElementById('forgotError').textContent='';
-  document.getElementById('forgotModal').classList.add('show');
-}
-function verifyForgotPassword(){
-  var usr=document.getElementById('forgotUsername').value.trim();
-  var ans=document.getElementById('securityAnswer').value.trim();
-  var err=document.getElementById('forgotError');
-  var qSec=document.getElementById('securityQSection');
-  var user=DEMO_USERS[usr];
-  if(!user){
-    err.textContent='שם משתמש לא קיים';
-    err.classList.add('show');
-    qSec.style.display='none';
-    return;
-  }
-  if(!qSec||qSec.style.display==='none'){
-    err.classList.remove('show');
-    document.getElementById('securityQLabel').textContent=user.securityQ;
-    qSec.style.display='block';
-    return;
-  }
-  if(ans.toLowerCase()===user.securityA.toLowerCase()){
-    err.classList.remove('show');
-    document.getElementById('displayedPassword').textContent=user.password;
-    document.getElementById('passwordDisplay').style.display='block';
-    document.getElementById('forgotUsername').disabled=true;
-    document.getElementById('securityAnswer').disabled=true;
-    setTimeout(function(){toast('הסיסמה נשלחה ל-'+user.email,'success');},800);
-  }else{
-    err.textContent='תשובה לא נכונה לשאלה האישית';
-    err.classList.add('show');
-  }
-}
-
 // ─── DATA ───
 var DB=[
   {tik:'2026-047',plate:'12-345-67',client:'יוסי כהן',model:'טויוטה קורולה XLi 2022',date:'02/04/2026',status:'prog',amount:20351,type:'car',claimNo:'2026-88421'},
@@ -925,42 +720,6 @@ function renderPhotoGallery(){
     return'<div class="photo-thumb"><img src="'+p.src+'"/><div class="photo-del" onclick="removePhoto('+i+')">×</div></div>';
   }).join('')||'<div style="font-size:12px;color:var(--text2)">עדיין לא הועלו תמונות לתיק זה</div>';
   var res=document.getElementById('anatoliResult');
-  if(res){res.className='hidden';res.innerHTML='';}
-}
-var tikDocs={};
-function addDocs(files){
-  var key=currentTikKey();
-  if(!tikDocs[key])tikDocs[key]=[];
-  var arr=tikDocs[key];
-  Array.prototype.forEach.call(files,function(file){
-    var reader=new FileReader();
-    reader.onload=function(e){
-      arr.push({name:file.name,type:file.type,src:e.target.result,tag:''});
-      renderDocGallery();
-    };
-    reader.readAsDataURL(file);
-  });
-}
-function removeDoc(idx){
-  var key=currentTikKey();
-  if(tikDocs[key]){tikDocs[key].splice(idx,1);renderDocGallery();}
-}
-function setDocTag(idx,val){
-  var arr=tikDocs[currentTikKey()]||[];
-  if(arr[idx])arr[idx].tag=val;
-}
-function renderDocGallery(){
-  var el=document.getElementById('docGallery');
-  if(!el)return;
-  var arr=tikDocs[currentTikKey()]||[];
-  el.innerHTML=arr.map(function(d,i){
-    var isImg=d.type&&d.type.indexOf('image')===0;
-    var thumb=isImg?('<img src="'+d.src+'"/>'):'<div class="doc-file-ico">📄</div>';
-    return'<div class="doc-card"><div class="doc-thumb">'+thumb+'<div class="photo-del" onclick="removeDoc('+i+')">×</div></div>'
-      +'<input class="doc-tag" type="text" value="'+(d.tag||'').replace(/"/g,'&quot;')+'" placeholder="סיווג מסמך..." onchange="setDocTag('+i+',this.value)"/>'
-      +'<div class="doc-fname" title="'+d.name+'">'+d.name+'</div></div>';
-  }).join('')||'<div style="font-size:12px;color:var(--text2)">עדיין לא הועלו מסמכים לתיק זה</div>';
-  var res=document.getElementById('docAnalysisResult');
   if(res){res.className='hidden';res.innerHTML='';}
 }
 // טבלת קידומות יצרן (WMI) נפוצות בשוק הישראלי — עובדת בלי תלות ברישום ה-VIN בארה"ב
@@ -1257,89 +1016,6 @@ function sendToAnatoli(){
     toast('שגיאה בחיבור לשרת אנטולי','info');
   });
 }
-function markFieldAiFilled(id){
-  var inp=document.getElementById(id);
-  if(!inp)return;
-  var fg=inp.closest('.fg');
-  if(!fg)return;
-  fg.classList.add('field-ai-fill');
-  var clear=function(){fg.classList.remove('field-ai-fill');inp.removeEventListener('input',clear);inp.removeEventListener('change',clear);};
-  inp.addEventListener('input',clear);
-  inp.addEventListener('change',clear);
-}
-var DOC_TYPES=[
-  {tag:'רישיון רכב',match:/רישיון|license|rישוי/i,fields:{'f-plate':'12-345-67','f-model':'טויוטה קורולה 2021','f-year':'2021','f-vin':'JTNBAAJE00J000000','f-carcode':'0834521'}},
-  {tag:'תעודת ביטוח / פוליסה',match:/ביטוח|insur|policy|פוליסה/i,fields:{'f-ins-insurer':'הראל חברה לביטוח','f-polno':'PL-00123456'}},
-  {tag:'טופס הודעה על תביעה',match:/תביע|claim|נזק/i,fields:{'f-claimno':'CL-2026-00981'}},
-  {tag:'תעודת זהות / רישיון נהיגה',match:/זהות|id|תז|נהיגה/i,fields:{'f-owner':'ישראל ישראלי'}},
-  {tag:'חשבונית / הצעת מחיר מוסך',match:/חשבונית|מוסך|garage|invoice/i,fields:{}},
-  {tag:'דוח משטרה',match:/משטרה|police/i,fields:{}},
-];
-function analyzeDocsWithAnatoli(){
-  if(CURRENT_USER_ROLE!=='Anatoli_Appraiser'){toast('אין הרשאה לניתוח מסמכים','info');return;}
-  var arr=tikDocs[currentTikKey()]||[];
-  if(!arr.length){toast('יש להעלות מסמכים תחילה','info');return;}
-  var res=document.getElementById('docAnalysisResult');
-  if(!ANATOLI_API_ENDPOINT){
-    // ── מצב הדגמה: אין עדיין שרת מחובר ──
-    var summary=[];
-    arr.forEach(function(doc,i){
-      if(!doc.tag){
-        var found=null;
-        for(var j=0;j<DOC_TYPES.length;j++){if(DOC_TYPES[j].match.test(doc.name)){found=DOC_TYPES[j];break;}}
-        var chosen=found||DOC_TYPES[i%DOC_TYPES.length];
-        doc.tag=chosen.tag;
-        Object.keys(chosen.fields||{}).forEach(function(fid){
-          var inp=document.getElementById(fid);
-          if(inp&&!inp.value.trim()){
-            inp.value=chosen.fields[fid];
-            inp.dispatchEvent(new Event('input'));
-            inp.dispatchEvent(new Event('change'));
-            markFieldAiFilled(fid);
-          }
-        });
-      }
-      summary.push('<li>'+doc.name+' ← <b>'+doc.tag+'</b></li>');
-    });
-    renderDocGallery();
-    if(res){
-      res.className='';
-      res.innerHTML='<div class="anatoli-box"><div class="anatoli-hd">📄 סיווג וחילוץ נתונים — אנטולי (הדגמה בממשק — אין שרת מחובר)</div>'
-        +'<div style="font-size:12px;color:var(--text2);line-height:1.7">אנטולי מזהה את סוג כל מסמך וממלא באופן אוטומטי שדות רלוונטיים בדוח — שדות שכבר מולאו ידנית אינם נדרסים. שדות שמולאו אוטומטית מסומנים בכתום עד לבדיקת ואישור השמאי (עריכה של השדה מסירה את הסימון).<ul>'+summary.join('')+'</ul>'
-        +'חשוב: זהו ממשק הדגמה בלבד — לזיהוי וחילוץ אמיתי מתוך תוכן הסריקה (OCR) יש לחבר נקודת קצה אמיתית (ראו ANATOLI_API_ENDPOINT למעלה).</div></div>';
-    }
-    toast('אנטולי סיווג את המסמכים ומילא שדות לדוגמה — יש לבדוק ולאשר','info');
-    return;
-  }
-  // ── מצב אמיתי: יש שרת מחובר ──
-  toast('שולח '+arr.length+' מסמכים לניתוח אנטולי...','info');
-  fetch(ANATOLI_API_ENDPOINT,{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({tik:currentTikKey(),role:CURRENT_USER_ROLE,mode:'documents',docs:arr.map(function(d){return{name:d.name,src:d.src};})})
-  }).then(function(r){return r.json();}).then(function(data){
-    (data.documents||[]).forEach(function(dres,i){
-      if(arr[i])arr[i].tag=dres.tag||arr[i].tag;
-      Object.keys(dres.fields||{}).forEach(function(fid){
-        var inp=document.getElementById(fid);
-        if(inp&&!inp.value.trim()){
-          inp.value=dres.fields[fid];
-          inp.dispatchEvent(new Event('input'));
-          inp.dispatchEvent(new Event('change'));
-          markFieldAiFilled(fid);
-        }
-      });
-    });
-    renderDocGallery();
-    if(res){
-      res.className='';
-      res.innerHTML='<div class="anatoli-box"><div class="anatoli-hd">📄 סיווג וחילוץ נתונים — אנטולי</div><div style="font-size:12px;color:var(--text2)">הניתוח הושלם — '+(data.documents||[]).length+' מסמכים סווגו ועודכנו בדוח.</div></div>';
-    }
-    toast('ניתוח המסמכים הושלם — יש לבדוק שדות שסומנו','success');
-  }).catch(function(err){
-    toast('שגיאה בחיבור לשרת אנטולי','info');
-  });
-}
 
 // ─── GARAGE REPOSITORY (grows as new garages are typed in) ───
 function spinSync(el){
@@ -1502,9 +1178,9 @@ function saveSumNotesText(){
 var formType='car';
 var currentRecord=null;
 var FORM_CONFIG={
-  car:{title:'חוות דעת שמאי',sub:'דוח מלא — כל 10 הפרקים',
-    tabs:['תמונות','מסמכים','רכב','תובע','שווי','תביעה','נזק','עבודות וחלקים','חוות דעת','סיכום'],
-    pages:['pageImages','pageDocs','pageA','pageB','pageC','pageD','pageE','pageGH','pageF','pageSum']},
+  car:{title:'חוות דעת שמאי',sub:'דוח מלא — כל 9 הפרקים',
+    tabs:['תמונות','רכב','תובע','שווי','תביעה','נזק','עבודות וחלקים','חוות דעת','סיכום'],
+    pages:['pageImages','pageA','pageB','pageC','pageD','pageE','pageGH','pageF','pageSum']},
   expert:{title:'אומדן ראשוני-אקספרטיזה',sub:'שדות & בלבד לפי האפיון',
     tabs:['תמונות','רכב','תביעה','עבודות וחלקים','סיכום'],
     pages:['pageImages','pageA_exp','pageD','pageGH','pageSum']},
@@ -1554,7 +1230,7 @@ function openForm(type,isExisting){
   var tabsEl=document.getElementById('formTabs');
   tabsEl.innerHTML='';
   tabsEl.classList.toggle('full-tabs',type==='expert');
-  var tabIconMap={pageA:'car',pageA_exp:'car',pageB:'person',pageC:'money',pageD:'doc',pageE:'warn',pageF:'lines',pageG:'cog',pageH:'lock',pageGH:'cog',pageReplace:'replace',pageSum:'chart',pageImages:'photo',pageDocs:'doc'};
+  var tabIconMap={pageA:'car',pageA_exp:'car',pageB:'person',pageC:'money',pageD:'doc',pageE:'warn',pageF:'lines',pageG:'cog',pageH:'lock',pageGH:'cog',pageReplace:'replace',pageSum:'chart',pageImages:'photo'};
   cfg.tabs.forEach(function(t,i){
     var d=document.createElement('div');
     d.className='form-tab'+(i===0?' on':'');
@@ -1593,7 +1269,6 @@ function openForm(type,isExisting){
   showPage('form');
   renderUpgradeBanner();
   renderPhotoGallery();
-  renderDocGallery();
   renderIntroLibrary();
   renderSumNotesLibrary();
   var notesLbl=document.getElementById('sumNotesLabel');
@@ -1610,7 +1285,6 @@ function openExistingTik(tik){
   setV('f-client',rec.client);
   renderUpgradeBanner();
   renderPhotoGallery();
-  renderDocGallery();
   renderIntroLibrary();
   renderSumNotesLibrary();
 }
@@ -1632,7 +1306,6 @@ function upgradeToFullReport(){
   if(baseEl&&(priceList||valManual)){baseEl.value=priceList||valManual;if(typeof calcV==='function')calcV();}
   renderUpgradeBanner();
   renderPhotoGallery();
-  renderDocGallery();
   renderIntroLibrary();
   renderSumNotesLibrary();
   toast('התיק שודרג לחוות דעת שמאי מלאה — הנתונים הקיימים מוזגו, כולל שווי הרכב','success');
@@ -1750,17 +1423,6 @@ function getPageHTML(name){
     +'<button class="tb-btn tb-btn-primary" onclick="sendToAnatoli()">שלח לניתוח שמאי — אנטולי (AI)</button>'
     +'</div>'
     +'<div id="anatoliResult" class="hidden"></div></div>';
-
-  if(name==='pageDocs') return'<div class="form-card"><div class="form-card-title" style="font-size:15px">'
-    +'<svg viewBox="0 0 24 24" fill="none" style="width:20px;height:20px;color:var(--blue)"><path d="M7 3h7l4 4v14a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M14 3v4h4" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12h6M9 15.5h6M9 8.5h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>'
-    +'מסמכי תיק — העלאה, שמירה וניתוח</div>'
-    +'<div class="fg"><label>העלאת מסמכים סרוקים (רישיון רכב, פוליסת ביטוח, תביעה, חשבוניות וכד׳)</label>'
-    +'<input type="file" id="docInput" accept="application/pdf,image/*" multiple onchange="addDocs(this.files)" style="padding:8px"/></div>'
-    +'<div id="docGallery" class="photo-grid"></div>'
-    +'<div class="flex" style="gap:12px;margin-top:14px;flex-wrap:wrap;align-items:center">'
-    +'<button class="tb-btn tb-btn-primary" onclick="analyzeDocsWithAnatoli()">שלח לניתוח אנטולי — זיהוי וחילוץ נתונים</button>'
-    +'</div>'
-    +'<div id="docAnalysisResult" class="hidden"></div></div>';
 
   if(name==='pageB') return fc('פרטי תובע / בעל רכב — פרק ב׳','person',
     fld('לכבוד — המזמין (A)','text','f-client','שם מלא / חברה',true,true)
@@ -2383,8 +2045,7 @@ function calcSum(){
     srEl.textContent=Math.abs(splitRem)<1?'החלוקה מאוזנת ✓ (סה"כ '+fmt(tot)+')':'נותר לחלוקה: '+fmt(splitRem);
     srEl.style.color=Math.abs(splitRem)<1?'var(--green)':'var(--red, #c0392b)';
   }
-  var workPartsVat=Math.round(wa+pa+vat);
-  var pctBar=base>0?Math.min(100,Math.round(workPartsVat/base*100)):0;
+  var pctBar=base>0?Math.min(100,Math.round(tot/base*100)):0;
   var s=function(id,v){var el=document.getElementById(id);if(el)el.textContent=v};
   s('sw-a',fmt(wa));s('sp-a',fmt(pa));s('s-vat',fmt(vat));s('s-dep',fmt(dep));
   var swLbl=document.getElementById('sw-a-label');
@@ -2545,7 +2206,7 @@ function renderReport(){
   var pctWidth=(document.getElementById('pf')||{}).style.width||'0%';
 
   var ownerFieldHtml=sameOwner
-    ?''
+    ?'<div class="rp-field full"><span class="lbl">הערה:</span><span class="val">המזמין ובעל הרכב אותו אדם</span></div>'
     :'<div class="rp-field"><span class="lbl">בעל הרכב:</span><span class="val">'+owner+'</span></div>';
   var phoneFieldHtml=phone?('<div class="rp-field"><span class="lbl">טלפון:</span><span class="val">'+phone+'</span></div>'):'';
 
@@ -2563,4 +2224,231 @@ function renderReport(){
   <div class="rp-section"><div class="rp-sec-title">חוות דעת (פרק ו׳)</div><div class="rp-notes">${introFree||'—'}</div></div>
   <div class="rp-section"><div class="rp-sec-title">עבודות (פרק ז׳)${hrRate?(' — תעריף ₪'+hrRate+' לשעה'):''}</div><table class="rp-table"><tr><th>סוג עבודה</th><th>שעות</th><th>נתבע</th><th>מאושר</th><th>הפרש</th><th>סיבה</th></tr>${worksHtml}<tr class="tbl-tot"><td colspan="2">סה"כ עבודות</td><td class="num"></td><td class="num bl">${sumWA}</td><td class="num"></td><td></td></tr></table></div>
   <div class="rp-section"><div class="rp-sec-title">חלקים (פרק ח׳)</div><table class="rp-table"><tr><th>שם חלק</th><th>מקוריות</th><th>מס׳ קטלוגי</th><th>נתבע</th><th>מאושר</th><th>הפרש</th><th>סיבה</th></tr>${partsHtml}<tr class="tbl-tot"><td colspan="3">סה"כ חלקים</td><td class="num"></td><td class="num bl">${sumPA}</td><td class="num"></td><td></td></tr></table></div>
-  <div class="rp-section"><div class="rp-sec-title">סיכום כספי (פרק ט׳)</div><div class="rp-sum-box"><div class="rp-sum-row"><span>עבודות — מאושר</span><span>${sumWA}</span></div><div class="rp-sum-row"><span>חלקים — מאושר</span><span>${sumPA}</span></div><div class="rp-sum-row"><span>מע"מ 18%</span><span>${sumVat}</span></div><div class="rp-sum-row"><span>ירידת ערך</span><span>${sumDep}</span></div>${diffRowHtml}<div class="rp-sum-row"><span style="font-size:15px">${sumTotLbl}</span><span style="font-size:17px;color:var(--blue)">${sumTot}</span></div></div><div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><span style="font-size:12px;color:var(--text2);white-space:nowrap">אחוז הנזק הגולמי:</span><div style="flex:1;he
+  <div class="rp-section"><div class="rp-sec-title">סיכום כספי (פרק ט׳)</div><div class="rp-sum-box"><div class="rp-sum-row"><span>עבודות — מאושר</span><span>${sumWA}</span></div><div class="rp-sum-row"><span>חלקים — מאושר</span><span>${sumPA}</span></div><div class="rp-sum-row"><span>מע"מ 18%</span><span>${sumVat}</span></div><div class="rp-sum-row"><span>ירידת ערך</span><span>${sumDep}</span></div>${diffRowHtml}<div class="rp-sum-row"><span style="font-size:15px">${sumTotLbl}</span><span style="font-size:17px;color:var(--blue)">${sumTot}</span></div></div><div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><span style="font-size:12px;color:var(--text2);white-space:nowrap">אחוז הנזק הגולמי:</span><div style="flex:1;height:10px;background:#e8e8e8;border-radius:5px;overflow:hidden"><div style="height:100%;background:var(--blue);border-radius:5px;width:${pctWidth}"></div></div><span style="font-size:12px;font-weight:700;color:var(--blue);white-space:nowrap">${pctLbl}</span></div>${sumNotes?('<div class="rp-notes" style="margin-top:8px">'+sumNotes+'</div>'):''}</div>
+  <div class="rp-section"><div class="rp-sec-title">הערות לדוח</div><div class="rp-notes">${reportNotes||'אין הערות נוספות.'}</div></div>
+  <div class="rp-sig-row"><div class="rp-sig-block"><div class="rp-sig-line"></div><div class="rp-sig-lbl">חתימת השמאי<br/>${appraiser}</div></div><div class="rp-sig-block"><div class="rp-sig-line"></div><div class="rp-sig-lbl">חותמת המשרד<br/>Estimax בע"מ</div></div><div class="rp-sig-block"><div class="rp-sig-line"></div><div class="rp-sig-lbl">תאריך<br/>${todayStr}</div></div></div>
+  <div class="rp-footer"><span>Estimax בע"מ &nbsp;|&nbsp; 03-000-0000 &nbsp;|&nbsp; estimax.co.il</span><span>מס׳ תיק: ${tik} &nbsp;|&nbsp; עמוד 1 מתוך 1</span></div>
+  `;
+}
+
+// ─── TOAST ───
+function toast(msg,type){
+  var el=document.getElementById('toastEl');
+  el.textContent=msg;el.className='toast show '+(type||'');
+  clearTimeout(window._tt);
+  window._tt=setTimeout(function(){el.classList.remove('show')},2000);
+}
+
+// ─── MONEY COMMA FORMATTING (הצגת פסיקים באלפים ישירות בתוך השדה) ───
+var MONEY_SEL='.pr,.pa,.wr-direct,.wa-direct,#f-base,#f-salvage,#f-repdaily,.mukadDeduct,#split-garage,#split-supplier,#split-insured,#f-pricelist,#f-value-manual';
+function moneyHint(el){
+  var hint=el.nextElementSibling;
+  if(!hint||!hint.classList||!hint.classList.contains('money-hint')){
+    hint=document.createElement('div');
+    hint.className='money-hint';
+    el.insertAdjacentElement('afterend',hint);
+  }
+  var v=pf(el.value)||0;
+  hint.textContent=el.value?('₪'+v.toLocaleString('he-IL')):'';
+}
+document.addEventListener('input',function(e){
+  if(e.target&&e.target.matches&&e.target.matches(MONEY_SEL))moneyHint(e.target);
+});
+// בפוקוס — מציגים את המספר הגולמי (ללא פסיקים) לעריכה נוחה
+document.addEventListener('focusin',function(e){
+  if(!e.target||!e.target.matches||!e.target.matches(MONEY_SEL))return;
+  var v=pf(e.target.value);
+  e.target.value=isNaN(v)?'':String(v);
+});
+// ביציאה מהשדה — מעצבים עם פסיקים לאלפים
+document.addEventListener('focusout',function(e){
+  if(!e.target||!e.target.matches||!e.target.matches(MONEY_SEL))return;
+  var v=pf(e.target.value);
+  e.target.value=isNaN(v)||e.target.value===''?e.target.value:v.toLocaleString('he-IL');
+});
+// עיצוב ראשוני לשדות שכבר מלאים מראש (טעינת תיק קיים)
+document.querySelectorAll(MONEY_SEL).forEach(function(el){
+  var v=pf(el.value);
+  if(!isNaN(v)&&el.value!=='')el.value=v.toLocaleString('he-IL');
+});
+
+// ─── DRAFT AUTO-SAVE (localStorage) — שומר את הטופס הפתוח בין מעברי עמוד, עד להפקת הדוח הסופי ───
+var DRAFT_KEY='estimax_draft_v1';
+var draftSaveTimer=null;
+function serializeDraft(){
+  var root=document.getElementById('formPages');
+  if(!root||!root.children.length)return null;
+  var state={formType:formType,savedAt:Date.now(),staticFields:{},chips:{},checks:{},lists:{}};
+  root.querySelectorAll('[id^="f-"]').forEach(function(el){
+    if(el.tagName==='INPUT'&&el.type==='file')return;
+    if(['INPUT','TEXTAREA','SELECT'].indexOf(el.tagName)!==-1)state.staticFields[el.id]=el.value;
+  });
+  root.querySelectorAll('.chips-group[id]').forEach(function(g){
+    var on=g.querySelector('.chip.on');
+    state.chips[g.id]=on?on.textContent.trim():'';
+  });
+  var cbSame=document.getElementById('cb-same');
+  if(cbSame)state.checks['cb-same']=cbSame.querySelector('.cb').classList.contains('on');
+  state.lists.works=Array.prototype.map.call(root.querySelectorAll('#wlist .witem'),function(item){
+    var typeSel=item.querySelector('.witem-hd select');
+    var whr=item.querySelector('.whr'),wha=item.querySelector('.wha');
+    var wrDirect=item.querySelector('.wr-direct'),waDirect=item.querySelector('.wa-direct');
+    var reason=item.querySelector('.reason-input');
+    return{type:typeSel?typeSel.value:'',whr:whr?whr.value:null,wha:wha?wha.value:null,
+      wrDirect:wrDirect?wrDirect.value:null,waDirect:waDirect?waDirect.value:null,
+      reason:reason?reason.value:''};
+  });
+  state.lists.parts=Array.prototype.map.call(root.querySelectorAll('#plist .witem'),function(item){
+    var nameInp=item.querySelector('.witem-hd input');
+    var origSel=item.querySelector('.grid2 select');
+    var catInp=item.querySelectorAll('.grid2 input')[0];
+    var pr=item.querySelector('.pr'),pa=item.querySelector('.pa');
+    var reason=item.querySelector('.reason-input');
+    return{name:nameInp?nameInp.value:'',orig:origSel?origSel.value:'',cat:catInp?catInp.value:'',
+      pr:pr?pr.value:'',pa:pa?pa.value:'',reason:reason?reason.value:''};
+  });
+  state.lists.adj=Array.prototype.map.call(root.querySelectorAll('#adjRows .adj-row'),function(row){
+    return{desc:row.querySelector('input[type="text"]').value,type:row.querySelector('select').value,pct:row.querySelector('.ap').value};
+  });
+  state.lists.mukad=Array.prototype.map.call(root.querySelectorAll('#mukadList .mukad-card'),function(row){
+    var sel=row.querySelector('.mukad-hd select');
+    var vatChip=row.querySelector('.vat-chip.on');
+    var deduct=row.querySelector('.mukadDeduct');
+    return{type:sel?sel.value:'',vat:vatChip?vatChip.textContent.trim():'',deduct:deduct?deduct.value:''};
+  });
+  state.lists.deprec=Array.prototype.map.call(root.querySelectorAll('#deprecRows .deprec-row'),function(row){
+    return{desc:row.querySelector('input[type="text"]').value,pct:row.querySelector('.dp').value};
+  });
+  return state;
+}
+function saveDraftNow(){
+  var state=serializeDraft();
+  if(!state)return;
+  try{localStorage.setItem(DRAFT_KEY,JSON.stringify(state));}catch(e){}
+}
+function scheduleDraftSave(){
+  clearTimeout(draftSaveTimer);
+  draftSaveTimer=setTimeout(saveDraftNow,600);
+}
+function clearDraft(){
+  try{localStorage.removeItem(DRAFT_KEY);}catch(e){}
+}
+function loadDraftRaw(){
+  try{var raw=localStorage.getItem(DRAFT_KEY);return raw?JSON.parse(raw):null;}catch(e){return null;}
+}
+function restoreDraft(state){
+  openForm(state.formType,true);
+  Object.keys(state.staticFields).forEach(function(id){
+    var el=document.getElementById(id);
+    if(el)el.value=state.staticFields[id];
+  });
+  Object.keys(state.chips).forEach(function(gid){
+    var g=document.getElementById(gid);
+    if(!g)return;
+    var wanted=state.chips[gid];
+    var found=Array.prototype.filter.call(g.querySelectorAll('.chip'),function(c){return c.textContent.trim()===wanted;})[0];
+    if(found)sc(found,gid);
+  });
+  if(state.checks&&state.checks['cb-same']!==undefined){
+    var cbSame=document.getElementById('cb-same');
+    if(cbSame){
+      var cb=cbSame.querySelector('.cb');
+      if(cb.classList.contains('on')!==state.checks['cb-same'])togCb(cbSame,'ownerSec');
+    }
+  }
+  (state.lists.works||[]).forEach(function(w){
+    addW();
+    var item=document.querySelector('#wlist .witem:last-child');
+    if(!item)return;
+    var typeSel=item.querySelector('.witem-hd select');
+    if(typeSel&&w.type)typeSel.value=w.type;
+    if(w.wrDirect!=null){
+      var wrDirect=item.querySelector('.wr-direct');
+      if(wrDirect){wrDirect.value=w.wrDirect;wrDirect.dispatchEvent(new Event('input'));}
+    }else if(w.whr!=null){
+      var whr=item.querySelector('.whr');
+      if(whr){whr.value=w.whr;whr.dispatchEvent(new Event('input'));}
+      var wha=item.querySelector('.wha');
+      if(wha&&w.wha!=null&&w.wha!==w.whr){wha.value=w.wha;wha.dataset.touched='1';wha.dispatchEvent(new Event('input'));}
+    }
+    if(w.waDirect!=null){
+      var waDirect=item.querySelector('.wa-direct');
+      if(waDirect&&waDirect.value!==w.waDirect){waDirect.value=w.waDirect;waDirect.dataset.touched='1';waDirect.dispatchEvent(new Event('input'));}
+    }
+    var reason=item.querySelector('.reason-input');
+    if(reason&&w.reason){reason.readOnly=false;reason.value=w.reason;}
+  });
+  (state.lists.parts||[]).forEach(function(p){
+    addP();
+    var item=document.querySelector('#plist .witem:last-child');
+    if(!item)return;
+    var nameInp=item.querySelector('.witem-hd input');
+    if(nameInp)nameInp.value=p.name||'';
+    var origSel=item.querySelector('.grid2 select');
+    if(origSel&&p.orig)origSel.value=p.orig;
+    var catInp=item.querySelectorAll('.grid2 input')[0];
+    if(catInp)catInp.value=p.cat||'';
+    var pr=item.querySelector('.pr');
+    if(pr){pr.value=p.pr||'';pr.dispatchEvent(new Event('input'));}
+    var pa=item.querySelector('.pa');
+    if(pa&&p.pa!==p.pr){pa.value=p.pa||'';pa.dataset.touched='1';pa.dispatchEvent(new Event('input'));}
+    var reason=item.querySelector('.reason-input');
+    if(reason&&p.reason){reason.readOnly=false;reason.value=p.reason;}
+  });
+  (state.lists.adj||[]).forEach(function(a){
+    addAdj();
+    var row=document.querySelector('#adjRows .adj-row:last-child');
+    if(!row)return;
+    row.querySelector('input[type="text"]').value=a.desc||'';
+    row.querySelector('select').value=a.type||'הפחתה';
+    row.querySelector('.ap').value=a.pct||'';
+  });
+  (state.lists.mukad||[]).forEach(function(m){
+    addMukad();
+    var row=document.querySelector('#mukadList .mukad-card:last-child');
+    if(!row)return;
+    var sel=row.querySelector('.mukad-hd select');
+    if(sel&&m.type)sel.value=m.type;
+    if(m.vat){
+      var chip=Array.prototype.filter.call(row.querySelectorAll('.vat-chip'),function(c){return c.textContent.trim()===m.vat;})[0];
+      if(chip)selVat(chip);
+    }
+    var deduct=row.querySelector('.mukadDeduct');
+    if(deduct)deduct.value=m.deduct||'';
+  });
+  (state.lists.deprec||[]).forEach(function(d){
+    addDeprecRow();
+    var row=document.querySelector('#deprecRows .deprec-row:last-child');
+    if(!row)return;
+    row.querySelector('input[type="text"]').value=d.desc||'';
+    row.querySelector('.dp').value=d.pct||'';
+  });
+  calcV();calcWT();calcPT();calcDeprec();calcSum();
+  if(typeof syncMokedFromChapterE==='function')syncMokedFromChapterE();
+  if(typeof updateMokedLock==='function')updateMokedLock();
+  toast('טיוטה קודמת שוחזרה אוטומטית','success');
+}
+document.addEventListener('input',function(e){
+  if(e.target&&e.target.closest&&e.target.closest('#formPages'))scheduleDraftSave();
+});
+document.addEventListener('change',function(e){
+  if(e.target&&e.target.closest&&e.target.closest('#formPages'))scheduleDraftSave();
+});
+
+// ─── INIT ───
+(function(){
+  var d=loadDraftRaw();
+  if(d&&d.staticFields&&Object.keys(d.staticFields).length){
+    var tikTxt=d.staticFields['f-tik']||'';
+    if(confirm('נמצאה טיוטה שנשמרה אוטומטית (תיק '+tikTxt+'). לשחזר אותה ולהמשיך מהמקום שעצרת?')){
+      restoreDraft(d);
+      return;
+    }else{
+      clearDraft();
+    }
+  }
+  showPage('dashboard');
+})();
+</script>
+</body>
+</html>                                                                                                                             

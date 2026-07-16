@@ -343,6 +343,25 @@ textarea{resize:vertical;line-height:1.6}
 </style>
 </head>
 <body>
+<div id="loginOverlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:1000">
+  <div style="background:white;border-radius:12px;padding:40px;width:90%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
+    <h1 style="text-align:center;margin-bottom:10px;color:#0C447C;font-size:24px">Estimax</h1>
+    <p style="text-align:center;color:#666;margin-bottom:30px;font-size:13px">הדרך החכמה להעריך</p>
+    <div id="loginError" style="color:#A32D2D;margin-bottom:15px;padding:10px;background:#FCEBEB;border-radius:8px;display:none;font-size:13px"></div>
+    <form id="loginForm" onsubmit="handleLogin(event)" style="display:flex;flex-direction:column;gap:12px">
+      <label style="font-weight:500">שם משתמש</label>
+      <input type="text" id="loginUsername" placeholder="admin" required style="border:1px solid #ddd;padding:9px 12px;border-radius:8px"/>
+      <label style="font-weight:500">סיסמה</label>
+      <input type="password" id="loginPassword" placeholder="123456" required style="border:1px solid #ddd;padding:9px 12px;border-radius:8px"/>
+      <button type="submit" style="width:100%;margin-top:8px;background:#0C447C;color:white;padding:10px;border-radius:8px;font-weight:500;cursor:pointer">התחברות</button>
+    </form>
+    <div style="background:#E6F1FB;padding:15px;border-radius:8px;margin-top:15px;font-size:12px;text-align:center">
+      admin / 123456
+    </div>
+  </div>
+</div>
+<div id="mainApp" style="display:none">
+
 
 <!-- ══ LOGIN SCREEN ══ -->
 <div class="login-overlay" id="loginOverlay">
@@ -643,6 +662,21 @@ textarea{resize:vertical;line-height:1.6}
 <div class="toast-wrap"><div class="toast" id="toastEl"></div></div>
 
 <script>
+// ═══════════════════════════════════════════════════════════
+// GRISHA AUTH SYSTEM - v2 FIX
+// ═══════════════════════════════════════════════════════════
+const AUTH_KEY = "estimax_user_v1";
+const DEMO_USERS = {admin:{password:"123456",role:"Anatoli_Appraiser",name:"משה כהן",email:"admin@estimax.co.il"}};
+function handleLogin(e){e.preventDefault();const u=document.getElementById("loginUsername").value.trim();const p=document.getElementById("loginPassword").value;const user=DEMO_USERS[u];const err=document.getElementById("loginError");if(user&&user.password===p){localStorage.setItem(AUTH_KEY,JSON.stringify({username:u,role:user.role,name:user.name,email:user.email}));err.style.display="none";showApp();}else{err.textContent="שם משתמש או סיסמה שגויים";err.style.display="block";}}
+function getCurrentUser(){try{const raw=localStorage.getItem(AUTH_KEY);return raw?JSON.parse(raw):null;}catch(e){return null;}}
+function showApp(){document.getElementById("loginOverlay").style.display="none";document.getElementById("mainApp").style.display="block";updateUserDisplay();}
+function hideApp(){document.getElementById("loginOverlay").style.display="flex";document.getElementById("mainApp").style.display="none";}
+function updateUserDisplay(){const user=getCurrentUser();if(user){const avatarEl=document.querySelector(".sb-avatar");if(avatarEl){const initials=user.name.split(" ").map(w=>w.charAt(0)).join("").substring(0,2);avatarEl.textContent=initials;}}}
+function logout(){if(confirm("האם אתה בטוח?")){localStorage.removeItem(AUTH_KEY);location.reload();}}
+function checkAuth(){const user=getCurrentUser();if(user){showApp();}else{hideApp();}}
+document.addEventListener("DOMContentLoaded",function(){checkAuth()});
+// ═══════════════════════════════════════════════════════════
+
 // ─── SIGNATURE ───
 var sigCanvas=null,sigCtx=null,isDrawing=false;
 function initSignature(){

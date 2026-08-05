@@ -1,0 +1,36 @@
+{
+  "name": "Estimax — הדרך החכמה להעריך",
+  "short_name": "Estimax",
+  "description": "מערכת שמאות רכב — פתיחת תיקים, תיעוד נזק והפקת חוות דעת מהשטח",
+  "lang": "he",
+  "dir": "rtl",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "orientation": "portrait-primary",
+  "background_color": "#0C447C",
+  "theme_color": "#0C447C",
+  "categories": ["business", "productivity"],
+  "icons": [
+    { "src": "./icons/icon-192.png",          "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-512.png",          "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "./icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "תיק חדש",
+      "short_name": "תיק חדש",
+      "description": "פתיחת חוות דעת חדשה",
+      "url": "./index.html?action=new-case",
+      "icons": [{ "src": "./icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "התיקים שלי",
+      "short_name": "תיקים",
+      "url": "./index.html?action=claims",
+      "icons": [{ "src": "./icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

@@ -2,8 +2,23 @@
 <html dir="rtl" lang="he">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <title>Estimax — הדרך החכמה להעריך</title>
+
+<!-- ══ PWA — הופך את האתר לאפליקציה מותקנת ══ -->
+<link rel="manifest" href="./manifest.json"/>
+<meta name="theme-color" content="#0C447C"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Estimax"/>
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png"/>
+<link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png"/>
+
+<!-- ══ שכבת נתונים וסנכרון ══ -->
+<script src="./estimax-config.js"></script>
+<script src="./estimax-api.js"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
@@ -682,26 +697,44 @@ function handleLogin(e){
   e.preventDefault();
   var usr=document.getElementById('loginUsername').value.trim();
   var pwd=document.getElementById('loginPassword').value;
-  var user=DEMO_USERS[usr];
   var err=document.getElementById('loginError');
-  if(user&&user.password===pwd){
-    localStorage.setItem(AUTH_KEY,JSON.stringify({username:usr,role:user.role,name:user.name}));
-    err.classList.remove('show');
+  var btn=e.target.querySelector('.login-btn');
+  var origTxt=btn?btn.textContent:'';
+
+  if(btn){btn.disabled=true;btn.textContent='מתחבר…';}
+  err.classList.remove('show');
+
+  // התחברות אמיתית מול השרת. אם estimax-config.js עדיין ריק,
+  // EstimaxAPI נופל אוטומטית למצב הדגמה (admin / 123456).
+  window.EstimaxAPI.login(usr,pwd).then(function(user){
+    var prof=window.EstimaxAPI.getProfile()||{};
+    localStorage.setItem(AUTH_KEY,JSON.stringify({
+      username: usr,
+      role: prof.role || 'Anatoli_Appraiser',
+      name:  prof.full_name || (user&&user.email) || usr,
+      email: user&&user.email
+    }));
     document.getElementById('loginOverlay').classList.add('hidden');
     updateUserDisplay();
     showPage('dashboard');
-  }else{
-    err.textContent='שם משתמש או סיסמה שגויים';
+  }).catch(function(ex){
+    err.textContent=ex&&ex.message?ex.message:'שם משתמש או סיסמה שגויים';
     err.classList.add('show');
-  }
+  }).finally(function(){
+    if(btn){btn.disabled=false;btn.textContent=origTxt;}
+  });
 }
 function getCurrentUser(){
   try{var raw=localStorage.getItem(AUTH_KEY);return raw?JSON.parse(raw):null;}catch(e){return null;}
 }
 function logout(){
   if(confirm('האם אתה בטוח שברצונך להתנתק?')){
-    localStorage.removeItem(AUTH_KEY);
-    location.reload();
+    Promise.resolve(window.EstimaxAPI&&window.EstimaxAPI.logout())
+      .catch(function(){})
+      .then(function(){
+        localStorage.removeItem(AUTH_KEY);
+        location.reload();
+      });
   }
 }
 function updateUserDisplay(){
@@ -2790,6 +2823,140 @@ document.addEventListener('change',function(e){
     }
   }
   showPage('dashboard');
+})();
+</script>
+
+<!-- ══════════════════════════════════════════════════════════════
+     ESTIMAX — אתחול PWA וסנכרון
+     כל מה שקשור להתקנה כאפליקציה, עבודה אופליין וסנכרון ענן.
+     הבלוק הזה עצמאי ואינו נוגע בקוד הקיים למעלה.
+     ══════════════════════════════════════════════════════════════ -->
+<style>
+  #ex-bar{position:fixed;bottom:0;left:0;right:0;z-index:10000;display:none;
+          padding:10px 16px;font:600 13px/1.4 inherit;text-align:center;color:#fff;
+          padding-bottom:calc(10px + env(safe-area-inset-bottom))}
+  #ex-bar.show{display:block}
+  #ex-bar.offline{background:#854F0B}
+  #ex-bar.syncing{background:#0C447C}
+  #ex-bar.ok{background:#1B7A4B}
+  #ex-install{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:10001;
+              display:none;align-items:center;gap:10px;background:#0C447C;color:#fff;border:0;
+              border-radius:999px;padding:13px 24px;font:600 14px inherit;cursor:pointer;
+              box-shadow:0 6px 24px rgba(12,68,124,.35)}
+  #ex-install.show{display:flex}
+  @media (display-mode:standalone){#ex-install{display:none!important}}
+</style>
+
+<div id="ex-bar"></div>
+<button id="ex-install" onclick="exInstall()">📲 התקן את Estimax במכשיר</button>
+
+<!-- גשר הענן — חייב להיטען אחרי הקוד הראשי כדי לעטוף את הפונקציות הקיימות -->
+<script src="./estimax-cloud-bridge.js"></script>
+
+<script>
+(function(){
+  var bar=document.getElementById('ex-bar');
+  var barTimer=null;
+  function showBar(msg,cls,autoHide){
+    bar.textContent=msg;
+    bar.className='show '+(cls||'');
+    clearTimeout(barTimer);
+    if(autoHide)barTimer=setTimeout(function(){bar.className='';},3000);
+  }
+  function hideBar(){bar.className='';}
+
+  /* ─── 1. רישום Service Worker (עבודה אופליין + התקנה) ─── */
+  if('serviceWorker' in navigator && location.protocol==='https:'){
+    window.addEventListener('load',function(){
+      navigator.serviceWorker.register('./sw.js').then(function(reg){
+        reg.addEventListener('updatefound',function(){
+          var nw=reg.installing;
+          nw&&nw.addEventListener('statechange',function(){
+            if(nw.state==='installed'&&navigator.serviceWorker.controller){
+              if(confirm('קיימת גרסה חדשה של Estimax. לרענן עכשיו?')){
+                nw.postMessage('SKIP_WAITING');location.reload();
+              }
+            }
+          });
+        });
+      }).catch(function(e){console.warn('[Estimax] SW לא נרשם',e);});
+    });
+  }else if(location.protocol!=='https:'&&location.hostname!=='localhost'){
+    console.warn('[Estimax] התקנה כאפליקציה דורשת HTTPS. ב-http האפליקציה תעבוד אבל לא תהיה ניתנת להתקנה.');
+  }
+
+  /* ─── 2. כפתור "התקן אפליקציה" ─── */
+  var deferredPrompt=null;
+  window.addEventListener('beforeinstallprompt',function(e){
+    e.preventDefault();
+    deferredPrompt=e;
+    document.getElementById('ex-install').classList.add('show');
+  });
+  window.exInstall=function(){
+    if(!deferredPrompt){
+      alert('בטלפון: פתח את תפריט הדפדפן (⋮) ובחר "הוסף למסך הבית".\nב-iPhone: כפתור השיתוף ↑ → "הוסף למסך הבית".');
+      return;
+    }
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.finally(function(){
+      deferredPrompt=null;
+      document.getElementById('ex-install').classList.remove('show');
+    });
+  };
+  window.addEventListener('appinstalled',function(){
+    document.getElementById('ex-install').classList.remove('show');
+    showBar('Estimax הותקן בהצלחה ✓','ok',true);
+  });
+
+  /* ─── 3. חיווי מצב רשת ─── */
+  function netState(){
+    if(!navigator.onLine){
+      showBar('אין חיבור — העבודה נשמרת במכשיר ותסונכרן אוטומטית','offline');
+    }else{
+      var pending=window.EstimaxAPI?window.EstimaxAPI.pendingCount():0;
+      if(pending>0)showBar('מסנכרן '+pending+' פריטים…','syncing');
+      else hideBar();
+    }
+  }
+  window.addEventListener('online',netState);
+  window.addEventListener('offline',netState);
+
+  /* ─── 4. אתחול שכבת הנתונים + חיבור המסכים לענן ─── */
+  window.EstimaxAPI.init().then(function(r){
+    window.EstimaxBridge.attach(window.EstimaxAPI, !r.demo);
+    if(r.demo){
+      console.warn('[Estimax] מצב הדגמה — הנתונים אינם מסונכרנים עם האתר.');
+    }else{
+      var demoHint=document.querySelector('.login-demo');
+      if(demoHint)demoHint.style.display='none';
+      var uLabel=document.querySelector('.login-form label');
+      var uInput=document.getElementById('loginUsername');
+      if(uLabel)uLabel.textContent='אימייל';
+      if(uInput){uInput.type='email';uInput.placeholder='name@estimax.co.il';}
+    }
+    netState();
+  });
+
+  window.EstimaxAPI.on('sync:done',function(s){
+    if(s.pending>0)showBar('ממתינים לסנכרון: '+s.pending,'syncing');
+    else if(s.pushed>0)showBar('סונכרן ✓','ok',true);
+    else hideBar();
+  });
+  window.EstimaxAPI.on('queue',netState);
+  window.EstimaxAPI.on('case:remote',function(){
+    showBar('התקבל עדכון מהאתר','ok',true);
+  });
+
+  /* ─── 5. חיווי סנכרון ידני (לחיצה על הסרגל מפעילה סנכרון) ─── */
+  bar.addEventListener('click',function(){
+    if(window.EstimaxAPI.isDemo())return;
+    showBar('מסנכרן…','syncing');
+    window.EstimaxAPI.sync().then(function(){window.EstimaxBridge.refresh();});
+  });
+
+  /* ─── 6. קיצורי דרך מהמסך הראשי ─── */
+  var act=new URLSearchParams(location.search).get('action');
+  if(act==='claims')setTimeout(function(){try{showPage('claims');}catch(e){}},400);
 })();
 </script>
 </body>

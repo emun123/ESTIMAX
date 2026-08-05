@@ -112,6 +112,34 @@
     return rec;
   }
 
+  /* ─── יירוט העלאת ה-PDF אל Supabase Storage ─── */
+  var PDF_SENTINEL = 'estimax-internal://save-report';
+  var pdfIntercepted = false;
+
+  function interceptPdfUpload() {
+    if (pdfIntercepted || typeof global.fetch !== 'function') return;
+    pdfIntercepted = true;
+    var origFetch = global.fetch.bind(global);
+
+    global.fetch = function (url, opts) {
+      // כל בקשה שאינה שלנו עוברת ללא נגיעה
+      if (String(url) !== PDF_SENTINEL) return origFetch(url, opts);
+
+      var fd = opts && opts.body;
+      var blob = fd && fd.get ? fd.get('file') : null;
+      var tik  = fd && fd.get ? fd.get('tik')  : null;
+      if (!blob || !activeCaseId) {
+        return Promise.resolve(new Response('', { status: 204 }));
+      }
+      return API.uploadReport(activeCaseId, blob, 'דוח-שמאות-' + (tik || '') + '.pdf', gv('f-report') || null)
+        .then(function () { return new Response('{"ok":true}', { status: 200 }); })
+        .catch(function (e) {
+          console.warn('[Bridge] העלאת הדוח לענן נכשלה', e);
+          return Promise.reject(e);
+        });
+    };
+  }
+
   /* ─── dataURL → Blob (להעלאת תמונות ל-Storage) ─── */
   function dataUrlToBlob(dataUrl) {
     var parts = dataUrl.split(',');
@@ -195,16 +223,37 @@
       };
     }
 
-    /* 5. הפקת דוח — סימון התיק כהושלם + העלאת ה-PDF */
+    /* 5. הפקת דוח — סימון התיק כהושלם + העלאת ה-PDF ל-Storage
+          הקוד המקורי כבר בונה את ה-PDF כ-blob ושולח אותו ב-FormData
+          לכתובת PDF_CLOUD_ENDPOINT. במקום לשכפל את כל הלוגיקה, אנחנו
+          מפנים את הכתובת לערך פנימי ותופסים אותו כאן. כל שאר קריאות
+          ה-fetch באפליקציה עוברות ללא שינוי. */
     if (typeof global.autoSavePDF === 'function') {
       var origPdf = global.autoSavePDF;
       global.autoSavePDF = function () {
+        if (active && !global.PDF_CLOUD_ENDPOINT) global.PDF_CLOUD_ENDPOINT = PDF_SENTINEL;
         var r = origPdf.apply(this, arguments);
         if (active) {
           pushCurrentForm('completed')
             .then(function () { refreshDB(); })
             .catch(function (e) { console.warn('[Bridge] סימון התיק כהושלם נכשל', e); });
         }
+        return r;
+      };
+      interceptPdfUpload();
+    }
+
+    /* 6. חתימה דיגיטלית — נשמרת בפרופיל בענן */
+    if (typeof global.saveSignature === 'function') {
+      var origSig = global.saveSignature;
+      global.saveSignature = function () {
+        var r = origSig.apply(this, arguments);
+        if (!active) return r;
+        var canvas = document.getElementById('sigCanvas');
+        if (!canvas || !canvas.toDataURL) return r;
+        API.saveSignature(canvas.toDataURL('image/png'))
+          .then(function () { console.log('[Bridge] החתימה נשמרה בפרופיל בענן'); })
+          .catch(function (e) { console.warn('[Bridge] שמירת החתימה בענן נכשלה', e); });
         return r;
       };
     }

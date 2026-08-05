@@ -5,7 +5,8 @@ import fs from 'fs';
 const log = [];
 const els = {};
 function el(id, value = '') { return (els[id] = { id, value, classList: { add(){}, remove(){}, contains(){return false;}, toggle(){} } }); }
-['f-tik','f-plate','f-client','f-value','f-8','f-model'].forEach(i => el(i));
+['f-tik','f-plate','f-client','f-value','f-8','f-model','f-report'].forEach(i => el(i));
+els['sigCanvas'] = { id: 'sigCanvas', toDataURL: () => 'data:image/png;base64,iVBORw0KGgo=' };
 
 const doc = {
   getElementById: id => els[id] || null,
@@ -33,7 +34,18 @@ const w = {
   openExistingTik(t)  { log.push('orig:openExistingTik:' + t); },
   openForm(t, ex)     { log.push('orig:openForm:' + t + ':' + !!ex); },
   addPhotos(f)        { log.push('orig:addPhotos:' + f.length); },
-  autoSavePDF()       { log.push('orig:autoSavePDF'); },
+  saveSignature()     { log.push('orig:saveSignature'); },
+  fetch: globalThis.fetch.bind(globalThis),
+  PDF_CLOUD_ENDPOINT: '',
+  // מדמה את הקוד המקורי: בונה PDF ושולח אותו ב-FormData לכתובת שבמשתנה
+  autoSavePDF() {
+    log.push('orig:autoSavePDF');
+    if (!w.PDF_CLOUD_ENDPOINT) return;
+    const fd = new FormData();
+    fd.append('file', new Blob(['%PDF-1.4 fake'], { type: 'application/pdf' }), 'r.pdf');
+    fd.append('tik', '2026-114');
+    w.fetch(w.PDF_CLOUD_ENDPOINT, { method: 'POST', body: fd });
+  },
   saveDraftNow()      { log.push('orig:saveDraftNow'); },
   restoreDraft(d)     { log.push('orig:restoreDraft:' + (d.staticFields['f-tik'] || '?')); },
   renderPhotoGallery(){ log.push('orig:renderPhotoGallery'); }
@@ -57,11 +69,15 @@ const cloudRows = [
 const events = {};
 const saved = [];
 const uploaded = [];
+const reports = [];
+const signatures = [];
 const fakeAPI = {
   listCases: async () => cloudRows,
   listImages: async () => [{ url: 'https://x/img1.jpg', caption: 'נזק קדמי' }],
   saveCase: async o => { const r = { ...o, id: o.id || 'new-uuid-0001' }; saved.push(r); return r; },
   uploadImage: async (cid, f) => { uploaded.push([cid, f.name]); return {}; },
+  uploadReport: async (cid, blob, name) => { reports.push([cid, name, blob.size]); return {}; },
+  saveSignature: async d => { signatures.push(d.slice(0, 22)); return 'path'; },
   getUser: () => ({ id: 'u1' }),
   sync: async () => ({}),
   on: (e, fn) => { (events[e] = events[e] || []).push(fn); }
@@ -97,9 +113,18 @@ w.addPhotos([{ name: 'front.jpg' }, { name: 'rear.jpg' }]); await sleep(30);
 console.log('8. העלאת תמונות         ->', uploaded.length, 'קבצים →', uploaded.map(u => u[1]).join(','));
 
 log.length = 0; saved.length = 0;
-w.autoSavePDF(); await sleep(30);
+w.autoSavePDF(); await sleep(60);
 console.log('9. הפקת דוח → סטטוס     ->', saved.length ? saved[saved.length-1].status : '❌ לא נשמר',
             '| סכום:', saved.length ? saved[saved.length-1].damage_total : '-');
+console.log('9b. ה-PDF עלה ל-Storage ->', reports.length ? reports[0][1] + ' (' + reports[0][2] + ' bytes)' : '❌ לא הועלה');
+
+// קריאת fetch רגילה חייבת לעבור ללא נגיעה
+let passthrough = 'לא נבדק';
+try { await w.fetch('https://example.invalid/x'); } catch (e) { passthrough = 'עברה לרשת האמיתית ✓'; }
+console.log('9c. fetch רגיל לא נחטף  ->', passthrough);
+
+w.saveSignature(); await sleep(30);
+console.log('9d. חתימה נשמרה בפרופיל ->', signatures.length ? signatures[0] + '… ✓' : '❌ לא נשמרה');
 
 // עדכון חי מהאתר
 cloudRows.push({ id: 'cccccccc-3333-4333-8333-333333333333', case_number: '2026-116', plate: '11-111-11',

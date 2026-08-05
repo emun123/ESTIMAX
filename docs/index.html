@@ -436,7 +436,7 @@ textarea{resize:vertical;line-height:1.6}
       <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.2"/><path d="M2 14c0-3.31 2.69-5 6-5s6 1.69 6 5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
       אנשי קשר — מוסכים ומקומות
     </div>
-    <div class="nav-item" onclick="toast('הגדרות — בקרוב','info')">
+    <div class="nav-item" onclick="exOpenProfile()">
       <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.2"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
       הגדרות
     </div>
@@ -1776,7 +1776,10 @@ function getPageHTML(name){
     +'<svg viewBox="0 0 24 24" fill="none" style="width:20px;height:20px;color:var(--blue)"><rect x="2" y="6" width="20" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 6l1.5-2.5h5L16 6" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="13" r="4" stroke="currentColor" stroke-width="1.6"/></svg>'
     +'תמונות תיק — העלאה, שמירה בענן וניתוח</div>'
     +'<div class="fg"><label>העלאת תמונות מהרכב / מקום התאונה</label>'
-    +'<input type="file" id="photoInput" accept="image/*" multiple onchange="addPhotos(this.files)" style="padding:8px"/></div>'
+    +'<input type="file" id="photoInput" accept="image/*" multiple onchange="addPhotos(this.files)" style="padding:8px"/>'
+    +'<input type="file" id="photoCamera" accept="image/*" capture="environment" multiple onchange="addPhotos(this.files)" style="display:none"/>'
+    +'<button type="button" class="tb-btn tb-btn-primary" style="margin-top:10px" onclick="document.getElementById(\'photoCamera\').click()">📷 צלם עכשיו</button>'
+    +'</div>'
     +'<div id="photoGallery" class="photo-grid"></div>'
     +'<div class="flex" style="gap:12px;margin-top:14px;flex-wrap:wrap;align-items:center">'
     +'<div class="sync-ico" title="לחץ לסנכרון עם הענן" onclick="spinSync(this)"><svg viewBox="0 0 24 24" fill="none" style="width:22px;height:22px"><path d="M20 12a8 8 0 10-2.34 5.66" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M20 6v6h-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'
@@ -2850,6 +2853,35 @@ document.addEventListener('change',function(e){
 <div id="ex-bar"></div>
 <button id="ex-install" onclick="exInstall()">📲 התקן את Estimax במכשיר</button>
 
+<!-- ══ הגדרות / פרופיל השמאי ══ -->
+<div class="modal-overlay" id="exProfileModal" onclick="closeModalOut(event,'exProfileModal')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-header-title">הגדרות — פרופיל השמאי</div>
+      <button class="modal-close" onclick="closeModal('exProfileModal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="login-error" id="exProfileMsg" style="margin-bottom:14px"></div>
+      <div class="fg"><label>שם מלא</label><input type="text" id="exFullName" placeholder="שם השמאי"/></div>
+      <div class="fg"><label>מספר רישיון שמאי</label><input type="text" id="exLicense" placeholder="12345"/></div>
+      <div class="fg"><label>טלפון</label><input type="tel" id="exPhone" placeholder="050-1234567"/></div>
+      <div class="fg"><label>שם המשרד</label><input type="text" id="exOffice" placeholder="משרד שמאות"/></div>
+      <div class="fg"><label>חתימה שמורה</label>
+        <div id="exSigPreview" style="border:1.5px solid var(--border2);border-radius:var(--radius);padding:10px;min-height:70px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text2)">טרם נשמרה חתימה</div>
+      </div>
+      <div style="font-size:11px;color:var(--text3);line-height:1.7;margin-top:6px">
+        הוספת שמאים נוספים למשרד נעשית כרגע דרך לוח הבקרה של Supabase
+        (Authentication → Users → Add user). מסך הזמנות מתוך האפליקציה דורש
+        פונקציית שרת (Edge Function) — ראה SETUP.md.
+      </div>
+    </div>
+    <div class="modal-footer" style="padding:16px 24px;display:flex;gap:10px;justify-content:flex-start">
+      <button class="tb-btn tb-btn-primary" onclick="exSaveProfile()">שמור</button>
+      <button class="tb-btn tb-btn-ghost" onclick="closeModal('exProfileModal')">ביטול</button>
+    </div>
+  </div>
+</div>
+
 <!-- גשר הענן — חייב להיטען אחרי הקוד הראשי כדי לעטוף את הפונקציות הקיימות -->
 <script src="./estimax-cloud-bridge.js"></script>
 
@@ -2954,7 +2986,56 @@ document.addEventListener('change',function(e){
     window.EstimaxAPI.sync().then(function(){window.EstimaxBridge.refresh();});
   });
 
-  /* ─── 6. קיצורי דרך מהמסך הראשי ─── */
+  /* ─── 6. מסך הגדרות / פרופיל השמאי ─── */
+  function exMsg(text,isError){
+    var el=document.getElementById('exProfileMsg');
+    el.textContent=text;
+    el.style.background=isError?'#FCEBEB':'#E8F5EE';
+    el.style.color=isError?'var(--red)':'#1B7A4B';
+    el.style.borderColor=isError?'#E2A8A8':'#A8D9BF';
+    el.classList.add('show');
+  }
+  window.exOpenProfile=function(){
+    var m=document.getElementById('exProfileModal');
+    document.getElementById('exProfileMsg').classList.remove('show');
+
+    if(window.EstimaxAPI.isDemo()){
+      exMsg('מצב הדגמה — הפרופיל אינו נשמר. מלא את estimax-config.js כדי לחבר לשרת.',true);
+    }else{
+      var p=window.EstimaxAPI.getProfile()||{};
+      document.getElementById('exFullName').value=p.full_name||'';
+      document.getElementById('exLicense').value=p.license_no||'';
+      document.getElementById('exPhone').value=p.phone||'';
+      document.getElementById('exOffice').value=p.office_name||'';
+
+      var prev=document.getElementById('exSigPreview');
+      prev.textContent='טוען חתימה…';
+      window.EstimaxAPI.getSignatureUrl().then(function(url){
+        if(url)prev.innerHTML='<img src="'+url+'" style="max-height:60px"/>';
+        else prev.textContent='טרם נשמרה חתימה — צייר אותה במסך הדוח ולחץ "שמור חתימה"';
+      }).catch(function(){prev.textContent='טרם נשמרה חתימה';});
+    }
+    m.classList.add('show');
+  };
+  window.exSaveProfile=function(){
+    if(window.EstimaxAPI.isDemo()){
+      exMsg('לא ניתן לשמור במצב הדגמה',true);
+      return;
+    }
+    window.EstimaxAPI.updateProfile({
+      full_name:   document.getElementById('exFullName').value.trim(),
+      license_no:  document.getElementById('exLicense').value.trim(),
+      phone:       document.getElementById('exPhone').value.trim(),
+      office_name: document.getElementById('exOffice').value.trim()
+    }).then(function(){
+      exMsg('הפרופיל נשמר ✓',false);
+      if(typeof updateUserDisplay==='function')updateUserDisplay();
+    }).catch(function(e){
+      exMsg(e&&e.message?e.message:'השמירה נכשלה',true);
+    });
+  };
+
+  /* ─── 7. קיצורי דרך מהמסך הראשי ─── */
   var act=new URLSearchParams(location.search).get('action');
   if(act==='claims')setTimeout(function(){try{showPage('claims');}catch(e){}},400);
 })();

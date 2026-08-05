@@ -304,6 +304,73 @@
     return r.data;
   }
 
+  /* ══════════════ דוחות מופקים (PDF) ══════════════ */
+  async function uploadReport(caseId, blob, filename, reportType) {
+    if (demoMode || !currentUser) throw new Error('שמירת דוח בענן דורשת חיבור לשרת');
+    var path = currentUser.id + '/' + caseId + '/' + Date.now() + '-' + (filename || 'report.pdf');
+
+    var up = await sb.storage.from('reports').upload(path, blob, {
+      upsert: false, contentType: 'application/pdf'
+    });
+    if (up.error) throw up.error;
+
+    var r = await sb.from('reports').insert({
+      case_id: caseId, owner_id: currentUser.id,
+      storage_path: path, report_type: reportType || null
+    }).select().single();
+    if (r.error) throw r.error;
+    return r.data;
+  }
+
+  async function listReports(caseId) {
+    if (demoMode || !currentUser) return [];
+    var r = await sb.from('reports').select('*').eq('case_id', caseId).order('issued_at', { ascending: false });
+    if (r.error) return [];
+    for (var i = 0; i < r.data.length; i++) {
+      var s = await sb.storage.from('reports').createSignedUrl(r.data[i].storage_path, 3600);
+      r.data[i].url = s.data ? s.data.signedUrl : null;
+    }
+    return r.data;
+  }
+
+  /* ══════════════ פרופיל וחתימה דיגיטלית ══════════════ */
+  async function updateProfile(fields) {
+    if (demoMode || !currentUser) throw new Error('עדכון פרופיל דורש חיבור לשרת');
+    var r = await sb.from('profiles').update(fields).eq('id', currentUser.id).select().single();
+    if (r.error) throw new Error(r.error.message);
+    currentProfile = r.data;
+    emit('profile', currentProfile);
+    return currentProfile;
+  }
+
+  function dataUrlToBlob(dataUrl) {
+    var parts = String(dataUrl).split(',');
+    var mime = (parts[0].match(/:(.*?);/) || [])[1] || 'image/png';
+    var bin = atob(parts[1]);
+    var arr = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+    return new Blob([arr], { type: mime });
+  }
+
+  // החתימה נשמרת תחת <uid>/_signature/ — נופל תחת אותה מדיניות RLS
+  // של הבאקט case-images, ולכן אינו דורש שינוי בסכמה.
+  async function saveSignature(dataUrl) {
+    if (demoMode || !currentUser) throw new Error('שמירת חתימה דורשת חיבור לשרת');
+    var path = currentUser.id + '/_signature/signature.png';
+    var up = await sb.storage.from('case-images').upload(path, dataUrlToBlob(dataUrl), {
+      upsert: true, contentType: 'image/png'
+    });
+    if (up.error) throw up.error;
+    await updateProfile({ signature_url: path });
+    return path;
+  }
+
+  async function getSignatureUrl() {
+    if (demoMode || !currentUser || !currentProfile || !currentProfile.signature_url) return null;
+    var s = await sb.storage.from('case-images').createSignedUrl(currentProfile.signature_url, 3600);
+    return s.data ? s.data.signedUrl : null;
+  }
+
   /* ══════════════ תור אופליין + סנכרון ══════════════ */
   function enqueue(rec) {
     var q = lsGet(LS_QUEUE, []);
@@ -375,6 +442,9 @@
     getUser: getUser, getProfile: getProfile, isDemo: isDemo, isOnline: isOnline,
     saveCase: saveCase, listCases: listCases, getCase: getCase, deleteCase: deleteCase,
     uploadImage: uploadImage, listImages: listImages,
+    uploadReport: uploadReport, listReports: listReports,
+    updateProfile: updateProfile, loadProfile: loadProfile,
+    saveSignature: saveSignature, getSignatureUrl: getSignatureUrl,
     sync: sync, pendingCount: pendingCount,
     on: on,
     _deviceId: deviceId

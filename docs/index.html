@@ -925,6 +925,9 @@ function closeModalOut(e,id){if(e.target===document.getElementById(id))closeModa
 // יש להדביק כאן את כתובת ה-Endpoint. כל עוד זה ריק, המערכת עובדת במצב הדגמה בלבד.
 var ANATOLI_API_ENDPOINT='';
 var CURRENT_USER_ROLE='Anatoli_Appraiser';
+// חשיפה ל-window כדי ש-anatoli-bridge.js יוכל לקרוא ולעטוף
+window.ANATOLI_API_ENDPOINT=ANATOLI_API_ENDPOINT;
+window.CURRENT_USER_ROLE=CURRENT_USER_ROLE;
 // מחירון "לוי יצחק" — כרגע אין קישור אמיתי (יעודכן בהמשך ע"י המשתמש).
 // כל עוד ריק, לחיצה על אייקון החיבור תציג מצב הדגמה בלבד.
 var LEVI_YITZHAK_API_ENDPOINT='';
@@ -2884,6 +2887,9 @@ document.addEventListener('change',function(e){
 
 <!-- גשר הענן — חייב להיטען אחרי הקוד הראשי כדי לעטוף את הפונקציות הקיימות -->
 <script src="./estimax-cloud-bridge.js"></script>
+
+<!-- גשר אנטולי — מעשיר את הניתוח בנתוני הרכב ומציג ממצאים מלאים -->
+<script src="./anatoli-bridge.js"></script>
 
 <script>
 (function(){

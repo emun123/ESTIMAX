@@ -12,13 +12,14 @@
      בלי זה המכשירים ימשיכו להציג את הגרסה הישנה.
    ══════════════════════════════════════════════════════════════ */
 
-const CACHE_VERSION = 'estimax-v2';
+const CACHE_VERSION = 'estimax-v3';
 const PRECACHE = [
   './',
   './index.html',
   './estimax-config.js',
   './estimax-api.js',
   './estimax-cloud-bridge.js',
+  './anatoli-bridge.js',
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png',
@@ -31,7 +32,8 @@ const NEVER_CACHE = [
   'supabase.in',
   'data.gov.il',
   'vpic.nhtsa.dot.gov',
-  'api.anthropic.com'
+  'api.anthropic.com',
+  '/analyze'          // ניתוחי אנטולי — תמיד חי, לעולם לא ממטמון
 ];
 
 self.addEventListener('install', event => {
@@ -59,7 +61,8 @@ self.addEventListener('fetch', event => {
   if (req.method !== 'GET') return;
 
   const url = new URL(req.url);
-  if (NEVER_CACHE.some(d => url.hostname.includes(d))) return;   // ישר לרשת
+  const full = url.hostname + url.pathname;
+  if (NEVER_CACHE.some(d => full.includes(d))) return;   // ישר לרשת
   if (url.protocol === 'chrome-extension:') return;
 
   event.respondWith(

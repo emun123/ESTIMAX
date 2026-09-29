@@ -321,7 +321,8 @@ textarea{resize:vertical;line-height:1.6}
 .seal-stamp{position:fixed;top:40px;right:40px;width:80px;height:80px;border:3px dashed #27500A;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#27500A;text-align:center;padding:4px;line-height:1.2;transform:rotate(-15deg);opacity:.15;pointer-events:none;z-index:5}
 @media print{.seal-stamp{opacity:.25}}
 /* חותמת עגולה בסיום הדוח — מחליפה את באנר "נחתם בחתימה דיגיטלית" */
-.rp-stamp-row{display:flex;justify-content:center;margin:22px 0 6px}
+/* החותמת בסוף הדוח, בצד שמאל. למרכז: justify-content:center */
+.rp-stamp-row{display:flex;justify-content:flex-end;margin:18px 0 4px}
 .rp-stamp{width:144px;height:144px}
 .rp-footer{border-top:1px solid #ccc;padding-top:6px;margin-top:16px;display:flex;justify-content:space-between;font-size:10px;color:var(--text3)}
 /* util */

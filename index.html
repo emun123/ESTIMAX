@@ -323,7 +323,7 @@ textarea{resize:vertical;line-height:1.6}
 /* חותמת עגולה בסיום הדוח — מחליפה את באנר "נחתם בחתימה דיגיטלית" */
 /* החותמת בסוף הדוח, בצד שמאל. למרכז: justify-content:center */
 .rp-stamp-row{display:flex;justify-content:flex-end;margin:18px 0 4px}
-.rp-stamp{width:144px;height:144px}
+.rp-stamp{width:104px;height:104px}
 .rp-footer{border-top:1px solid #ccc;padding-top:6px;margin-top:16px;display:flex;justify-content:space-between;font-size:10px;color:var(--text3)}
 /* util */
 .hidden{display:none!important}
@@ -1947,7 +1947,7 @@ function getPageHTML(name){
     +'<tr><td>מע"מ 18%</td><td style="text-align:left" id="s-vat">₪0</td></tr>'
     +'<tr id="s-dep-row"><td>ירידת ערך</td><td style="text-align:left" id="s-dep">₪0</td></tr>'
     +'<tr class="diff-row" id="s-diff-row"><td>סה"כ הפרשים</td><td style="text-align:left" id="s-diff">₪0</td></tr>'
-    +'<tr><td id="s-tot-label">סה"כ לתשלום</td><td style="text-align:left" id="s-tot">₪0</td></tr>'
+    +'<tr><td id="s-tot-label">סה"כ הערכתנו</td><td style="text-align:left" id="s-tot">₪0</td></tr>'
     +'<tr id="s-deduct-row"><td style="font-weight:600;padding-top:10px">השתתפות עצמית (מבוטח)</td><td style="text-align:left;font-weight:600;padding-top:10px" id="s-deduct">₪0</td></tr>'
     +'<tr id="s-net-insurer-row"><td>סה"כ הערכת הנזק</td><td style="text-align:left" id="s-net-insurer">₪0</td></tr>'
     +'</table>' 
@@ -2496,7 +2496,7 @@ function calcSum(){
   var benOn=document.querySelector('#payBeneficiary .chip.on');
   var benTxt=benOn?benOn.textContent.trim():'';
   var totLbl=document.getElementById('s-tot-label');
-  if(totLbl)totLbl.textContent=benTxt==='מוסך'?'סה"כ תשלום למוסך':(benTxt==='מבוטח / בעל רכב'?'סה"כ הערכת נזק':'סה"כ לתשלום');
+  if(totLbl)totLbl.textContent=benTxt==='מוסך'?'סה"כ תשלום למוסך':(benTxt==='מבוטח / בעל רכב'?'סה"כ הערכת נזק':'סה"כ הערכתנו');
   var diffRow=document.getElementById('s-diff-row');
   if(diffRow)diffRow.style.display=diff>0?'':'none';
   s('s-deduct',fmt(deduct));s('s-net-insurer',fmt(netInsurer));
@@ -2639,7 +2639,7 @@ function renderReport(){
   var sumDiff=gt('s-diff')||'₪0';
   var diffRowHtml=(sumDiff&&sumDiff!=='₪0')?('<div class="rp-sum-row rdiff"><span>הפרשים שלא אושרו</span><span>'+sumDiff+'</span></div>'):'';
   var sumTot=gt('s-tot')||'₪0';
-  var sumTotLbl=gt('s-tot-label')||'סה"כ לתשלום';
+  var sumTotLbl=gt('s-tot-label')||'סה"כ הערכתנו';
   var pctLbl=gt('plbl')||'0% נזק גולמי';
   var pctWidth=((document.getElementById('pf')||{}).style||{}).width||'0%';
 
@@ -2653,7 +2653,7 @@ function renderReport(){
     <div class="rp-meta"><b>מס׳ תיק:</b> <span class="num">${tik}</span><br/><b>תאריך הפקה:</b> <span class="num">${todayStr}</span><br/><b>שמאי בודק:</b> ${appraiser}<br/><b>סטטוס:</b> טיוטה</div>
     <img class="rp-brand-img" src="./icons/logo-estimax.png" alt="EstiMax — הדרך החכמה להעריך"/>
   </div>
-  <div class="rp-title-row"><div class="rp-title">חוות דעת שמאי${caseType!=='—'?' — '+caseType:''}</div><div class="rp-subtitle">${repType} &nbsp;|&nbsp; ${insurer} &nbsp;|&nbsp; תביעה מס׳ ${claimno}</div></div>
+  <div class="rp-title-row"><div class="rp-title">חוות דעת שמאי</div><div class="rp-subtitle">${repType} &nbsp;|&nbsp; ${insurer} &nbsp;|&nbsp; תביעה מס׳ ${claimno}</div></div>
   <div class="lecavod-box"><div class="lecavod-tag">לכבוד</div><div class="lecavod-name">${client}</div><div class="lecavod-addr">${address||'—'}</div></div>
   <div class="rp-section"><div class="rp-sec-title">פרטי המזמין / בעל הרכב (פרק ב׳)</div><div class="rp-grid"><div class="rp-field"><span class="lbl">שם מלא:</span><span class="val">${client}</span></div>${phoneFieldHtml}<div class="rp-field"><span class="lbl">עיר:</span><span class="val">${dash(city)}</span></div>${ownerFieldHtml}</div></div>
   <div class="rp-section"><div class="rp-sec-title">פרטי התביעה (פרק ד׳)</div><div class="rp-grid three"><div class="rp-field"><span class="lbl">תאריך אירוע:</span><span class="val">${evdate}</span></div><div class="rp-field"><span class="lbl">חברת ביטוח מבטחת:</span><span class="val">${insurer}</span></div><div class="rp-field"><span class="lbl">חברת ביטוח נתבעת:</span><span class="val">${dash(defendant)}</span></div><div class="rp-field"><span class="lbl">מס׳ תביעה:</span><span class="val">${claimno}</span></div><div class="rp-field"><span class="lbl">מס׳ פוליסה:</span><span class="val">${polno}</span></div><div class="rp-field"><span class="lbl">סוג מקרה:</span><span class="val">${caseType}</span></div></div></div>
@@ -2664,27 +2664,26 @@ function renderReport(){
   <div class="rp-section"><div class="rp-sec-title">חלקים (פרק ח׳)</div><table class="rp-table"><tr><th>שם חלק</th><th>מקוריות</th><th>מס׳ קטלוגי</th><th>נתבע</th><th>מאושר</th><th>הפרש</th><th>סיבה</th></tr>${partsHtml}<tr class="tbl-tot"><td colspan="3">סה"כ חלקים</td><td class="num"></td><td class="num bl">${sumPA}</td><td class="num"></td><td></td></tr></table></div>
   <div class="rp-section"><div class="rp-sec-title">סיכום כספי (פרק ט׳)</div><div class="rp-sum-box"><div class="rp-sum-row"><span>עבודות</span><span>${sumWA}</span></div><div class="rp-sum-row"><span>חלקים</span><span>${sumPA}</span></div><div class="rp-sum-row"><span>מע"מ 18%</span><span>${sumVat}</span></div><div class="rp-sum-row"><span>ירידת ערך</span><span>${sumDep}</span></div>${diffRowHtml}<div class="rp-sum-row"><span style="font-size:15px">${sumTotLbl}</span><span style="font-size:17px;color:var(--blue)">${sumTot}</span></div></div><div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><span style="font-size:12px;color:var(--text2);white-space:nowrap">אחוז הנזק הגולמי:</span><div style="flex:1;height:10px;background:#e8e8e8;border-radius:5px;overflow:hidden"><div style="height:100%;background:var(--blue);border-radius:5px;width:${pctWidth}"></div></div><span style="font-size:12px;font-weight:700;color:var(--blue);white-space:nowrap">${pctLbl}</span></div>${sumNotes?('<div class="rp-notes" style="margin-top:8px">'+sumNotes+'</div>'):''}</div>
   <div class="rp-section"><div class="rp-sec-title">הערות לדוח</div><div class="rp-notes">${reportNotes||'אין הערות נוספות.'}</div></div>
-  <div class="rp-sig-row"><div class="rp-sig-block" id="rpSigBlock"><img id="rpSigImg" class="rp-sig-img" alt="חתימת השמאי"/><div class="rp-sig-line"></div><div class="rp-sig-lbl">חתימת השמאי<br/>${appraiser}</div></div><div class="rp-sig-block"><div class="rp-sig-line"></div><div class="rp-sig-lbl">משרד השמאות<br/>Estimax בע"מ</div></div><div class="rp-sig-block"><div class="rp-sig-line"></div><div class="rp-sig-lbl">תאריך<br/>${todayStr}</div></div></div>
+  <div class="rp-sig-row"><div class="rp-sig-block" id="rpSigBlock"><img id="rpSigImg" class="rp-sig-img" alt="חתימת השמאי"/><div class="rp-sig-line"></div><div class="rp-sig-lbl">חתימת השמאי<br/>${appraiser}</div></div><div class="rp-sig-block"><div class="rp-sig-line"></div><div class="rp-sig-lbl">חותמת המשרד<br/>אמון שמאים ומעריכים</div></div><div class="rp-sig-block"><div class="rp-sig-line"></div><div class="rp-sig-lbl">תאריך<br/>${todayStr}</div></div></div>
   <div class="sig-container no-pdf no-print"><div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:10px">חותמת דיגיטלית</div><canvas id="sigCanvas" class="sig-canvas"></canvas><div class="sig-info"><div class="sig-meta"><b>שמאי:</b> ${appraiser} | <b>תאריך:</b> ${todayStr} <b>שעה:</b> <span id="sigTime">--:--</span></div><div class="sig-buttons"><button class="sig-btn" type="button" onclick="clearSignature()">נקה</button><button class="sig-btn" type="button" onclick="saveSignature()">שמור חתימה</button></div></div></div>
   <div class="rp-stamp-row">
     <svg class="rp-stamp" viewBox="0 0 160 160" role="img" aria-label="חותמת חתימה דיגיטלית מאומתת">
       <circle cx="80" cy="80" r="76" fill="#FBFCFD"/>
-      <circle cx="80" cy="80" r="75" fill="none" stroke="#1B3A5C" stroke-width="2.6"/>
+      <circle cx="80" cy="80" r="75" fill="none" stroke="#1B3A5C" stroke-width="2.8"/>
       <circle cx="80" cy="80" r="68.5" fill="none" stroke="#C39B2E" stroke-width="5" stroke-dasharray="1.6 5.2" stroke-linecap="round" opacity=".85"/>
-      <circle cx="80" cy="80" r="62" fill="none" stroke="#C39B2E" stroke-width="1.4"/>
-      <circle cx="80" cy="80" r="59" fill="none" stroke="#1B3A5C" stroke-width=".8" opacity=".45"/>
-      <circle cx="80" cy="36.5" r="10.5" fill="none" stroke="#C39B2E" stroke-width="1.8"/>
-      <path d="M75.4 36.6l3.4 3.5 6.2-6.6" fill="none" stroke="#1B3A5C" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-      <text x="80" y="64.5" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="10.5" font-weight="700" fill="#1B3A5C" letter-spacing=".6">מסמך נחתם דיגיטלית</text>
-      <path d="M44 71h72" stroke="#C39B2E" stroke-width="1.2"/>
-      <text x="80" y="90" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="19" font-weight="700" fill="#1B3A5C" letter-spacing=".4">EstiMax</text>
-      <text x="80" y="101.5" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="8.5" fill="#1B3A5C" opacity=".8">שמאות והערכת נזקי רכב</text>
-      <path d="M52 108h56" stroke="#C39B2E" stroke-width=".9" opacity=".7"/>
-      <text x="80" y="120" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="700" fill="#1B3A5C">תיק ${tik}</text>
-      <text x="80" y="131" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="8.5" fill="#1B3A5C" opacity=".75">${todayStr}</text>
+      <circle cx="80" cy="80" r="62" fill="none" stroke="#C39B2E" stroke-width="1.5"/>
+      <circle cx="80" cy="80" r="58.5" fill="none" stroke="#1B3A5C" stroke-width=".9" opacity=".45"/>
+      <circle cx="80" cy="38" r="11" fill="none" stroke="#C39B2E" stroke-width="2"/>
+      <path d="M75.2 38.1l3.5 3.6 6.4-6.8" fill="none" stroke="#1B3A5C" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="80" y="66" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="10" font-weight="700" fill="#1B3A5C">מסמך נחתם דיגיטלית</text>
+      <path d="M42 73h76" stroke="#C39B2E" stroke-width="1.3"/>
+      <text x="80" y="92" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="20" font-weight="700" fill="#1B3A5C">אמון</text>
+      <text x="80" y="105" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="10" font-weight="700" fill="#1B3A5C">שמאים ומעריכים</text>
+      <path d="M52 113h56" stroke="#C39B2E" stroke-width="1" opacity=".7"/>
+      <text x="80" y="126" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9.5" font-weight="700" fill="#1B3A5C">תיק ${tik}</text>
     </svg>
   </div>
-  <div class="rp-footer"><span>Estimax בע"מ &nbsp;|&nbsp; 03-000-0000 &nbsp;|&nbsp; estimax.co.il</span><span>מס׳ תיק: ${tik} &nbsp;|&nbsp; עמוד 1 מתוך 1</span></div>
+  <div class="rp-footer"><span>אמון שמאים ומעריכים &nbsp;|&nbsp; 03-000-0000 &nbsp;|&nbsp; estimax.co.il</span><span>מס׳ תיק: ${tik} &nbsp;|&nbsp; עמוד 1 מתוך 1</span></div>
   `;
 }
 

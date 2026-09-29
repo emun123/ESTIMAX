@@ -36,8 +36,11 @@
   --shadow-lg:0 10px 15px rgba(0,0,0,.1),0 4px 6px rgba(0,0,0,.05);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI','Arial',sans-serif;background:var(--bg);color:var(--text);direction:rtl;font-size:14px;line-height:1.5;zoom:1.22}
+body{font-family:'Segoe UI','Arial',sans-serif;background:var(--bg);color:var(--text);direction:rtl;font-size:14px;line-height:1.5;zoom:var(--app-zoom,1.22)}
 @media print{body{zoom:1}}
+/* מסך נמוך (מחשב נייד 768px): פחות זום, אחרת חצי מהממשק יוצא מהמסך */
+@media (max-height:820px){:root{--app-zoom:1.06}}
+@media (max-height:660px){:root{--app-zoom:1}}
 /* ─── LAYOUT ─── */
 .shell{display:flex;min-height:100vh}
 .sidebar{width:190px;background:var(--blue);color:#fff;flex-shrink:0;display:flex;flex-direction:column;position:fixed;top:0;right:0;bottom:0;z-index:50}
@@ -52,14 +55,17 @@ body{font-family:'Segoe UI','Arial',sans-serif;background:var(--bg);color:var(--
 .sb-avatar{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0}
 .sb-user-name{font-size:13px;font-weight:500}
 .sb-user-role{font-size:11px;opacity:.65}
-.sb-nav{padding:12px 12px;flex:1}
+.sb-nav{padding:12px 12px;flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.28) transparent}
+.sb-nav::-webkit-scrollbar{width:6px}
+.sb-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.28);border-radius:3px}
+.sb-nav::-webkit-scrollbar-track{background:transparent}
 .nav-section{font-size:10px;font-weight:600;opacity:.5;letter-spacing:.08em;text-transform:uppercase;padding:8px 10px 4px}
 .nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--radius);cursor:pointer;font-size:13px;color:rgba(255,255,255,.8);transition:background .15s;margin-bottom:2px}
 .nav-item:hover{background:rgba(255,255,255,.1)}
 .nav-item.active{background:rgba(255,255,255,.18);color:#fff;font-weight:500}
 .nav-item svg{width:17px;height:17px;flex-shrink:0;opacity:.8}
 .nav-item.active svg{opacity:1}
-.sb-bottom{padding:16px 20px;border-top:1px solid rgba(255,255,255,.12)}
+.sb-bottom{padding:16px 20px;border-top:1px solid rgba(255,255,255,.12);flex:0 0 auto}
 .cloud-status{display:flex;align-items:center;gap:6px;font-size:11px;opacity:.8}
 .cloud-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
@@ -202,13 +208,13 @@ textarea{resize:vertical;line-height:1.6}
 /* modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
 .modal-overlay.show{opacity:1;pointer-events:all}
-.modal{background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);width:520px;max-width:95vw;overflow:hidden;transform:scale(.97) translateY(8px);transition:transform .2s}
+.modal{background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);width:520px;max-width:95vw;max-height:calc(92vh / var(--app-zoom,1.22));display:flex;flex-direction:column;overflow:hidden;transform:scale(.97) translateY(8px);transition:transform .2s}
 .modal-overlay.show .modal{transform:scale(1) translateY(0)}
-.modal-header{padding:18px 24px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.modal-header{padding:18px 24px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex:0 0 auto}
 .modal-header-title{font-size:16px;font-weight:600;flex:1}
 .modal-close{cursor:pointer;color:var(--text3);font-size:22px;line-height:1;background:none;border:none;font-family:inherit;transition:color .15s}
 .modal-close:hover{color:var(--text)}
-.modal-body{padding:20px 24px}
+.modal-body{padding:20px 24px;flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 .contact-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px}
 .contact-row .contact-name{font-size:13px;font-weight:500;flex:1}
 .contact-cat{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;white-space:nowrap}
@@ -252,7 +258,7 @@ textarea{resize:vertical;line-height:1.6}
 .fg.field-ai-fill{background:#FFF8ED;border-radius:var(--radius);padding:6px;margin:-6px -6px 8px}
 .fg.field-ai-fill input,.fg.field-ai-fill select,.fg.field-ai-fill textarea{border-color:#F5A623!important}
 .fg.field-ai-fill label::after{content:' 🤖 אנטולי — ממתין לאישור';color:#F5A623;font-size:10px;font-weight:600}
-.modal-footer{padding:14px 24px 18px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end}
+.modal-footer{padding:14px 24px 18px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;flex:0 0 auto}
 /* toast */
 .toast-wrap{position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:999;display:flex;flex-direction:column;gap:6px;align-items:center}
 .toast{background:var(--text);color:#fff;padding:10px 20px;border-radius:var(--radius);font-size:13px;opacity:0;transition:opacity .25s;white-space:nowrap;box-shadow:var(--shadow-md)}
@@ -333,8 +339,8 @@ textarea{resize:vertical;line-height:1.6}
 .ob-title{font-size:14px;font-weight:700;color:var(--blue);margin:2px 0 6px}
 .ob-note{font-size:11px;color:var(--text3);line-height:1.7;margin-bottom:14px}
 .ob-slot{display:flex;align-items:center;gap:12px}
-.ob-prev{flex:1;min-height:70px;border:1.5px dashed var(--border2);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--text3);padding:8px;background:#fff}
-.ob-prev img{max-height:62px;max-width:100%;object-fit:contain}
+.ob-prev{flex:1;min-height:58px;border:1.5px dashed var(--border2);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--text3);padding:8px;background:#fff}
+.ob-prev img{max-height:50px;max-width:100%;object-fit:contain}
 .ob-actions{display:flex;flex-direction:column;gap:6px}
 #obSection{border-bottom:1px solid var(--border);padding-bottom:18px;margin-bottom:18px}
 .rp-footer{border-top:1px solid #ccc;padding-top:6px;margin-top:16px;display:flex;justify-content:space-between;font-size:10px;color:var(--text3)}
@@ -345,6 +351,17 @@ textarea{resize:vertical;line-height:1.6}
 .page-hd{display:flex;align-items:center;gap:12px;margin-bottom:20px}
 .page-hd-title{font-size:20px;font-weight:700}
 .page-hd-sub{font-size:13px;color:var(--text2);margin-top:2px}
+/* מסכים נמוכים (1366x768 וכדומה) — החלון חייב להישאר שמיש */
+@media (max-height:820px){
+  .modal{max-height:calc(95vh / var(--app-zoom,1.06))}
+  .modal-header{padding:14px 20px 11px}
+  .modal-body{padding:14px 20px}
+  .modal-footer{padding:11px 20px 14px}
+  .fg{margin-bottom:11px}
+  #obSection{padding-bottom:13px;margin-bottom:13px}
+  .ob-prev{min-height:50px}
+  .ob-prev img{max-height:42px}
+}
 /* print */
 @media print{
   .sidebar,.topbar,.form-tabs,.botbar,.tb-btn,.no-print{display:none!important}
@@ -356,6 +373,8 @@ textarea{resize:vertical;line-height:1.6}
    ולכן html2canvas מצייר אותה באמצע הדף, על גבי הטקסט. שניהם יורדים. */
 .no-pdf{}
 @media print{.no-pdf,.seal-stamp,#ex-install{display:none!important}}
+/* הזום של הממשק משתנה לפי גובה המסך — ה-PDF חייב לצאת זהה בכל מחשב */
+body.pdf-mode{zoom:1}
 body.pdf-mode .no-pdf,
 body.pdf-mode .seal-stamp,
 body.pdf-mode #ex-install{display:none!important}

@@ -1,2 +1,8 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# תמונות ואייקונים — בינארי, בלי נרמול שורות
+*.png binary
+*.jpg binary
+*.ico binary
+*.zip binary

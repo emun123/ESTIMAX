@@ -12,7 +12,7 @@
      בלי זה המכשירים ימשיכו להציג את הגרסה הישנה.
    ══════════════════════════════════════════════════════════════ */
 
-const CACHE_VERSION = 'estimax-v6';
+const CACHE_VERSION = 'estimax-v7';
 const PRECACHE = [
   './',
   './index.html',

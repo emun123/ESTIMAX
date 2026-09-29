@@ -264,7 +264,8 @@ textarea{resize:vertical;line-height:1.6}
 .rp-header{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid var(--blue);padding-bottom:12px;margin-bottom:16px}
 .rp-logo{font-size:22px;font-weight:700;color:var(--blue)}
 .rp-logo-sub{font-size:11px;color:var(--text2);margin-top:2px}
-.rp-meta{text-align:left;font-size:11px;color:var(--text2);line-height:1.8}
+.rp-meta{text-align:right;font-size:11px;color:var(--text2);line-height:1.8;direction:rtl}
+.rp-meta .num{unicode-bidi:plaintext}
 .rp-meta b{color:var(--text)}
 .rp-title-row{text-align:center;margin-bottom:18px}
 .rp-title{font-size:18px;font-weight:700;color:var(--blue)}
@@ -301,6 +302,10 @@ textarea{resize:vertical;line-height:1.6}
 .rp-sig-block{text-align:center;width:180px}
 .rp-sig-line{border-top:1px solid #555;margin-top:28px;margin-bottom:5px}
 .rp-sig-lbl{font-size:11px;color:var(--text2);line-height:1.5}
+/* חתימת השמאי בתוך בלוק החתימה — מוצגת מעל הקו, בלי מסגרת */
+.rp-sig-img{display:none;max-height:52px;max-width:100%;margin:0 auto -4px;object-fit:contain}
+.rp-sig-img.on{display:block}
+.rp-sig-block.signed .rp-sig-line{margin-top:6px}
 /* DIGITAL SIGNATURE */
 .sig-container{border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-top:16px;background:#fafbfc}
 .sig-canvas{display:block;border:1px dashed var(--border2);border-radius:4px;background:#fff;width:100%;height:120px;cursor:crosshair}
@@ -328,6 +333,14 @@ textarea{resize:vertical;line-height:1.6}
   .main{margin-right:0}
   .rp-page{border:none;box-shadow:none;padding:10mm}
 }
+/* ── מה לא נכנס ל-PDF ולהדפסה ──
+   פאד החתימה הוא כלי עריכה, לא חלק מהמסמך. חותמת הרקע היא position:fixed
+   ולכן html2canvas מצייר אותה באמצע הדף, על גבי הטקסט. שניהם יורדים. */
+.no-pdf{}
+@media print{.no-pdf,.seal-stamp,#ex-install{display:none!important}}
+body.pdf-mode .no-pdf,
+body.pdf-mode .seal-stamp,
+body.pdf-mode #ex-install{display:none!important}
 /* LOGIN SCREEN */
 .login-overlay{position:fixed;inset:0;background:linear-gradient(135deg,var(--blue) 0%,var(--blue2) 100%);display:flex;align-items:center;justify-content:center;z-index:9999;opacity:1;transition:opacity .3s}
 .login-overlay.hidden{display:none}
@@ -1195,6 +1208,42 @@ function connectLeviYitzhak(){
     toast('שגיאה בחיבור למחירון לוי יצחק','info');
   });
 }
+/* ─── הכנת הדוח לייצוא ───────────────────────────────────────────────
+   שלושה דברים שאסור להם להיכנס ל-PDF:
+   1. פאד החתימה — כלי עריכה, לא חלק מהמסמך. במקומו החתימה עצמה
+      נטענת לתוך בלוק "חתימת השמאי", מעל הקו.
+   2. חותמת הרקע (.seal-stamp) — position:fixed, ולכן html2canvas
+      מצייר אותה באמצע הדף על גבי הטקסט.
+   3. באנר ההתקנה של ה-PWA — גם הוא fixed ונלכד בצילום.
+   ──────────────────────────────────────────────────────────────────── */
+function signatureDataUrl(){
+  var c=document.getElementById('sigCanvas');
+  var SP=window.SignaturePersist;
+  try{
+    if(c&&c.toDataURL&&SP&&typeof SP.isBlank==='function'&&!SP.isBlank(c)){
+      return c.toDataURL('image/png');
+    }
+  }catch(_){}
+  try{ if(SP&&SP.hasLocal&&SP.hasLocal())return SP.getLocal(); }catch(_){}
+  return null;
+}
+function preparePdfView(){
+  document.body.classList.add('pdf-mode');
+  var img=document.getElementById('rpSigImg');
+  var block=document.getElementById('rpSigBlock');
+  var src=signatureDataUrl();
+  if(img&&src){
+    img.src=src;
+    img.classList.add('on');
+    if(block)block.classList.add('signed');
+  }else if(img){
+    img.classList.remove('on');
+    if(block)block.classList.remove('signed');
+  }
+}
+function restorePdfView(){
+  document.body.classList.remove('pdf-mode');
+}
 function autoSavePDF(){
   var el=document.getElementById('reportPage');
   if(!el||typeof html2canvas==='undefined'||typeof window.jspdf==='undefined'){
@@ -1204,7 +1253,9 @@ function autoSavePDF(){
   var btn=document.getElementById('autoPdfBtn');
   if(btn)btn.textContent='☁ מייצר PDF...';
   toast('מייצר PDF אוטומטית...','info');
+  preparePdfView();
   html2canvas(el,{scale:2,useCORS:true}).then(function(canvas){
+    restorePdfView();
     var imgData=canvas.toDataURL('image/png');
     var jsPDFLib=window.jspdf.jsPDF;
     var pdf=new jsPDFLib('p','mm','a4');
@@ -1239,10 +1290,14 @@ function autoSavePDF(){
       toast('שגיאה בשמירת הדוח לענן','info');
     });
   }).catch(function(err){
+    restorePdfView();
     if(btn)btn.textContent='☁ שמירה אוטומטית ל-PDF';
     toast('שגיאה ביצירת ה-PDF','info');
   });
 }
+/* הדפסה רגילה (Ctrl+P) מקבלת בדיוק את אותו טיפול */
+window.addEventListener('beforeprint',preparePdfView);
+window.addEventListener('afterprint',restorePdfView);
 function sendToAnatoli(){
   if(CURRENT_USER_ROLE!=='Anatoli_Appraiser'){toast('אין הרשאה לשליחת תמונות לניתוח','info');return;}
   var arr=tikPhotos[currentTikKey()]||[];
@@ -2581,7 +2636,7 @@ function renderReport(){
   var sumTot=gt('s-tot')||'₪0';
   var sumTotLbl=gt('s-tot-label')||'סה"כ לתשלום';
   var pctLbl=gt('plbl')||'0% נזק גולמי';
-  var pctWidth=(document.getElementById('pf')||{}).style.width||'0%';
+  var pctWidth=((document.getElementById('pf')||{}).style||{}).width||'0%';
 
   var ownerFieldHtml=sameOwner
     ?''
@@ -2590,8 +2645,8 @@ function renderReport(){
 
   document.getElementById('reportPage').innerHTML=`
   <div class="rp-header">
-    <div><div class="rp-logo">Estimax</div><div class="rp-logo-sub">הדרך החכמה להעריך</div></div>
-    <div class="rp-meta"><b>מס׳ תיק:</b> ${tik}<br/><b>תאריך הפקה:</b> ${todayStr}<br/><b>שמאי בודק:</b> ${appraiser}<br/><b>סטטוס:</b> טיוטה</div>
+    <div class="rp-meta"><b>מס׳ תיק:</b> <span class="num">${tik}</span><br/><b>תאריך הפקה:</b> <span class="num">${todayStr}</span><br/><b>שמאי בודק:</b> ${appraiser}<br/><b>סטטוס:</b> טיוטה</div>
+    <div class="rp-brand"><div class="rp-logo">Estimax</div><div class="rp-logo-sub">הדרך החכמה להעריך</div></div>
   </div>
   <div class="rp-title-row"><div class="rp-title">דוח שמאות רכב${caseType!=='—'?' — '+caseType:''}</div><div class="rp-subtitle">${repType} &nbsp;|&nbsp; ${insurer} &nbsp;|&nbsp; תביעה מס׳ ${claimno}</div></div>
   <div class="lecavod-box"><div class="lecavod-tag">לכבוד</div><div class="lecavod-name">${client}</div><div class="lecavod-addr">${address||'—'}</div></div>
@@ -2604,8 +2659,8 @@ function renderReport(){
   <div class="rp-section"><div class="rp-sec-title">חלקים (פרק ח׳)</div><table class="rp-table"><tr><th>שם חלק</th><th>מקוריות</th><th>מס׳ קטלוגי</th><th>נתבע</th><th>מאושר</th><th>הפרש</th><th>סיבה</th></tr>${partsHtml}<tr class="tbl-tot"><td colspan="3">סה"כ חלקים</td><td class="num"></td><td class="num bl">${sumPA}</td><td class="num"></td><td></td></tr></table></div>
   <div class="rp-section"><div class="rp-sec-title">סיכום כספי (פרק ט׳)</div><div class="rp-sum-box"><div class="rp-sum-row"><span>עבודות — מאושר</span><span>${sumWA}</span></div><div class="rp-sum-row"><span>חלקים — מאושר</span><span>${sumPA}</span></div><div class="rp-sum-row"><span>מע"מ 18%</span><span>${sumVat}</span></div><div class="rp-sum-row"><span>ירידת ערך</span><span>${sumDep}</span></div>${diffRowHtml}<div class="rp-sum-row"><span style="font-size:15px">${sumTotLbl}</span><span style="font-size:17px;color:var(--blue)">${sumTot}</span></div></div><div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><span style="font-size:12px;color:var(--text2);white-space:nowrap">אחוז הנזק הגולמי:</span><div style="flex:1;height:10px;background:#e8e8e8;border-radius:5px;overflow:hidden"><div style="height:100%;background:var(--blue);border-radius:5px;width:${pctWidth}"></div></div><span style="font-size:12px;font-weight:700;color:var(--blue);white-space:nowrap">${pctLbl}</span></div>${sumNotes?('<div class="rp-notes" style="margin-top:8px">'+sumNotes+'</div>'):''}</div>
   <div class="rp-section"><div class="rp-sec-title">הערות לדוח</div><div class="rp-notes">${reportNotes||'אין הערות נוספות.'}</div></div>
-  <div class="rp-sig-row"><div class="rp-sig-block"><div class="rp-sig-line"></div><div class="rp-sig-lbl">חתימת השמאי<br/>${appraiser}</div></div><div class="rp-sig-block"><div class="rp-sig-line"></div><div class="rp-sig-lbl">חותמת המשרד<br/>Estimax בע"מ</div></div><div class="rp-sig-block"><div class="rp-sig-line"></div><div class="rp-sig-lbl">תאריך<br/>${todayStr}</div></div></div>
-  <div class="sig-container"><div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:10px">חותמת דיגיטלית</div><canvas id="sigCanvas" class="sig-canvas"></canvas><div class="sig-info"><div class="sig-meta"><b>שמאי:</b> ${appraiser} | <b>תאריך:</b> ${todayStr} <b>שעה:</b> <span id="sigTime">--:--</span></div><div class="sig-buttons"><button class="sig-btn" type="button" onclick="clearSignature()">נקה</button><button class="sig-btn" type="button" onclick="saveSignature()">שמור חתימה</button></div></div></div>
+  <div class="rp-sig-row"><div class="rp-sig-block" id="rpSigBlock"><img id="rpSigImg" class="rp-sig-img" alt="חתימת השמאי"/><div class="rp-sig-line"></div><div class="rp-sig-lbl">חתימת השמאי<br/>${appraiser}</div></div><div class="rp-sig-block"><div class="rp-sig-line"></div><div class="rp-sig-lbl">משרד השמאות<br/>Estimax בע"מ</div></div><div class="rp-sig-block"><div class="rp-sig-line"></div><div class="rp-sig-lbl">תאריך<br/>${todayStr}</div></div></div>
+  <div class="sig-container no-pdf no-print"><div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:10px">חותמת דיגיטלית</div><canvas id="sigCanvas" class="sig-canvas"></canvas><div class="sig-info"><div class="sig-meta"><b>שמאי:</b> ${appraiser} | <b>תאריך:</b> ${todayStr} <b>שעה:</b> <span id="sigTime">--:--</span></div><div class="sig-buttons"><button class="sig-btn" type="button" onclick="clearSignature()">נקה</button><button class="sig-btn" type="button" onclick="saveSignature()">שמור חתימה</button></div></div></div>
   <div style="text-align:center;margin:20px 0;padding:12px;background:#EAF3DE;border:2px solid #27500A;border-radius:var(--radius)"><div class="digital-seal" style="margin:0 auto;width:fit-content"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M8 12l3 3 5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>נחתם בחתימה דיגיטלית מאומתת</div><div style="font-size:10px;color:#27500A;margin-top:6px;font-weight:600">Estimax בע"מ | תיק ${tik}</div></div>
   <div class="rp-footer"><span>Estimax בע"מ &nbsp;|&nbsp; 03-000-0000 &nbsp;|&nbsp; estimax.co.il</span><span>מס׳ תיק: ${tik} &nbsp;|&nbsp; עמוד 1 מתוך 1</span></div>
   `;

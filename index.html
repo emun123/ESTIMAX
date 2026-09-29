@@ -324,6 +324,19 @@ textarea{resize:vertical;line-height:1.6}
 /* החותמת בסוף הדוח, בצד שמאל. למרכז: justify-content:center */
 .rp-stamp-row{display:flex;justify-content:flex-end;margin:18px 0 4px}
 .rp-stamp{width:104px;height:104px}
+.rp-stamp-img{max-width:132px;max-height:132px;width:auto;height:auto;display:block}
+.rp-office-name{font-size:21px;font-weight:700;color:var(--blue);line-height:1.2}
+.rp-office-sub{font-size:11px;color:var(--text2);margin-top:3px}
+/* קרדיט לבית התוכנה — קטן, בתחתית, לא מתחרה בזהות המשרד */
+.rp-credit{text-align:center;font-size:9px;color:var(--text3);opacity:.75;margin-top:4px;letter-spacing:.2px}
+/* ── מסך ההגדרות: זהות המשרד ── */
+.ob-title{font-size:14px;font-weight:700;color:var(--blue);margin:2px 0 6px}
+.ob-note{font-size:11px;color:var(--text3);line-height:1.7;margin-bottom:14px}
+.ob-slot{display:flex;align-items:center;gap:12px}
+.ob-prev{flex:1;min-height:70px;border:1.5px dashed var(--border2);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--text3);padding:8px;background:#fff}
+.ob-prev img{max-height:62px;max-width:100%;object-fit:contain}
+.ob-actions{display:flex;flex-direction:column;gap:6px}
+#obSection{border-bottom:1px solid var(--border);padding-bottom:18px;margin-bottom:18px}
 .rp-footer{border-top:1px solid #ccc;padding-top:6px;margin-top:16px;display:flex;justify-content:space-between;font-size:10px;color:var(--text3)}
 /* util */
 .hidden{display:none!important}
@@ -2496,7 +2509,7 @@ function calcSum(){
   var benOn=document.querySelector('#payBeneficiary .chip.on');
   var benTxt=benOn?benOn.textContent.trim():'';
   var totLbl=document.getElementById('s-tot-label');
-  if(totLbl)totLbl.textContent=benTxt==='מוסך'?'סה"כ תשלום למוסך':(benTxt==='מבוטח / בעל רכב'?'סה"כ הערכת נזק':'סה"כ הערכתנו');
+  if(totLbl)totLbl.textContent=benTxt==='מוסך'?'סה"כ תשלום למוסך':(benTxt==='מבוטח / בעל רכב'?'סה"כ הערכתנו':'סה"כ הערכתנו');
   var diffRow=document.getElementById('s-diff-row');
   if(diffRow)diffRow.style.display=diff>0?'':'none';
   s('s-deduct',fmt(deduct));s('s-net-insurer',fmt(netInsurer));
@@ -2651,7 +2664,7 @@ function renderReport(){
   document.getElementById('reportPage').innerHTML=`
   <div class="rp-header">
     <div class="rp-meta"><b>מס׳ תיק:</b> <span class="num">${tik}</span><br/><b>תאריך הפקה:</b> <span class="num">${todayStr}</span><br/><b>שמאי בודק:</b> ${appraiser}<br/><b>סטטוס:</b> טיוטה</div>
-    <img class="rp-brand-img" src="./icons/logo-estimax.png" alt="EstiMax — הדרך החכמה להעריך"/>
+    <div class="rp-brand"><img class="rp-brand-img" src="./icons/logo-estimax.png" alt="EstiMax — הדרך החכמה להעריך"/></div>
   </div>
   <div class="rp-title-row"><div class="rp-title">חוות דעת שמאי</div><div class="rp-subtitle">${repType} &nbsp;|&nbsp; ${insurer} &nbsp;|&nbsp; תביעה מס׳ ${claimno}</div></div>
   <div class="lecavod-box"><div class="lecavod-tag">לכבוד</div><div class="lecavod-name">${client}</div><div class="lecavod-addr">${address||'—'}</div></div>
@@ -2664,7 +2677,7 @@ function renderReport(){
   <div class="rp-section"><div class="rp-sec-title">חלקים (פרק ח׳)</div><table class="rp-table"><tr><th>שם חלק</th><th>מקוריות</th><th>מס׳ קטלוגי</th><th>נתבע</th><th>מאושר</th><th>הפרש</th><th>סיבה</th></tr>${partsHtml}<tr class="tbl-tot"><td colspan="3">סה"כ חלקים</td><td class="num"></td><td class="num bl">${sumPA}</td><td class="num"></td><td></td></tr></table></div>
   <div class="rp-section"><div class="rp-sec-title">סיכום כספי (פרק ט׳)</div><div class="rp-sum-box"><div class="rp-sum-row"><span>עבודות</span><span>${sumWA}</span></div><div class="rp-sum-row"><span>חלקים</span><span>${sumPA}</span></div><div class="rp-sum-row"><span>מע"מ 18%</span><span>${sumVat}</span></div><div class="rp-sum-row"><span>ירידת ערך</span><span>${sumDep}</span></div>${diffRowHtml}<div class="rp-sum-row"><span style="font-size:15px">${sumTotLbl}</span><span style="font-size:17px;color:var(--blue)">${sumTot}</span></div></div><div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><span style="font-size:12px;color:var(--text2);white-space:nowrap">אחוז הנזק הגולמי:</span><div style="flex:1;height:10px;background:#e8e8e8;border-radius:5px;overflow:hidden"><div style="height:100%;background:var(--blue);border-radius:5px;width:${pctWidth}"></div></div><span style="font-size:12px;font-weight:700;color:var(--blue);white-space:nowrap">${pctLbl}</span></div>${sumNotes?('<div class="rp-notes" style="margin-top:8px">'+sumNotes+'</div>'):''}</div>
   <div class="rp-section"><div class="rp-sec-title">הערות לדוח</div><div class="rp-notes">${reportNotes||'אין הערות נוספות.'}</div></div>
-  <div class="rp-sig-row"><div class="rp-sig-block" id="rpSigBlock"><img id="rpSigImg" class="rp-sig-img" alt="חתימת השמאי"/><div class="rp-sig-line"></div><div class="rp-sig-lbl">חתימת השמאי<br/>${appraiser}</div></div><div class="rp-sig-block"><div class="rp-sig-line"></div><div class="rp-sig-lbl">חותמת המשרד<br/>אמון שמאים ומעריכים</div></div><div class="rp-sig-block"><div class="rp-sig-line"></div><div class="rp-sig-lbl">תאריך<br/>${todayStr}</div></div></div>
+  <div class="rp-sig-row"><div class="rp-sig-block" id="rpSigBlock"><img id="rpSigImg" class="rp-sig-img" alt="חתימת השמאי"/><div class="rp-sig-line"></div><div class="rp-sig-lbl">חתימת השמאי<br/>${appraiser}</div></div><div class="rp-sig-block"><div class="rp-sig-line"></div><div class="rp-sig-lbl" id="rpOfficeLbl">חותמת המשרד<br/>אמון שמאים ומעריכים</div></div><div class="rp-sig-block"><div class="rp-sig-line"></div><div class="rp-sig-lbl">תאריך<br/>${todayStr}</div></div></div>
   <div class="sig-container no-pdf no-print"><div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:10px">חותמת דיגיטלית</div><canvas id="sigCanvas" class="sig-canvas"></canvas><div class="sig-info"><div class="sig-meta"><b>שמאי:</b> ${appraiser} | <b>תאריך:</b> ${todayStr} <b>שעה:</b> <span id="sigTime">--:--</span></div><div class="sig-buttons"><button class="sig-btn" type="button" onclick="clearSignature()">נקה</button><button class="sig-btn" type="button" onclick="saveSignature()">שמור חתימה</button></div></div></div>
   <div class="rp-stamp-row">
     <svg class="rp-stamp" viewBox="0 0 160 160" role="img" aria-label="חותמת חתימה דיגיטלית מאומתת">
@@ -2683,7 +2696,8 @@ function renderReport(){
       <text x="80" y="126" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9.5" font-weight="700" fill="#1B3A5C">תיק ${tik}</text>
     </svg>
   </div>
-  <div class="rp-footer"><span>אמון שמאים ומעריכים &nbsp;|&nbsp; 03-000-0000 &nbsp;|&nbsp; estimax.co.il</span><span>מס׳ תיק: ${tik} &nbsp;|&nbsp; עמוד 1 מתוך 1</span></div>
+  <div class="rp-footer"><span id="rpFooterOffice">אמון שמאים ומעריכים &nbsp;|&nbsp; 03-000-0000</span><span>מס׳ תיק: ${tik} &nbsp;|&nbsp; עמוד 1 מתוך 1</span></div>
+  <div class="rp-credit">מופק באמצעות EstiMax</div>
   `;
 }
 
@@ -2975,6 +2989,9 @@ document.addEventListener('change',function(e){
 
 <!-- טבלת אחוזי ירידת ערך — הנחיה מקצועית לשמאי -->
 <script src="./depreciation-table.js"></script>
+
+<!-- זהות משרד השמאות — לוגו, חותמת ופרטים, מוגדרים בהגדרות -->
+<script src="./office-brand.js"></script>
 
 <script>
 (function(){

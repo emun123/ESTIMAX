@@ -39,7 +39,7 @@
     { id: 'paint_single',  name: 'צבע — פאנל בודד',                min: 0.5, max: 1.5, note: '' },
     { id: 'mechanical',    name: 'מכלול מכני (מנוע, גיר, מתלים)',  min: 1,   max: 4,   note: 'לפי היקף הפירוק' },
     { id: 'adas',          name: 'מערכות ADAS — החלפה וכיול',      min: 1,   max: 3,   note: 'נדרש אישור כיול ממוסך מורשה' },
-    { id: 'flood',         name: 'נוקי מים / הצפה',                min: 10,  max: 25,  note: 'פגיעה מערכתית; שקול אובדן להלכה' },
+    { id: 'flood',         name: 'נזקי מים / הצפה',                min: 10,  max: 25,  note: 'פגיעה מערכתית; שקול אובדן להלכה' },
   ];
 
   function ageFactor(years) {

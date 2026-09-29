@@ -12,7 +12,7 @@
      בלי זה המכשירים ימשיכו להציג את הגרסה הישנה.
    ══════════════════════════════════════════════════════════════ */
 
-const CACHE_VERSION = 'estimax-v3';
+const CACHE_VERSION = 'estimax-v6';
 const PRECACHE = [
   './',
   './index.html',
@@ -20,6 +20,9 @@ const PRECACHE = [
   './estimax-api.js',
   './estimax-cloud-bridge.js',
   './anatoli-bridge.js',
+  './signature-persist.js',
+  './signature-upload.js',
+  './depreciation-table.js',
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png',
